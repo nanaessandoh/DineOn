@@ -8,5 +8,7 @@ namespace DineOn.Service.Interfaces
     public interface ICategory
     {
         IEnumerable<Category> GetAll();
+        void Add(Category newCategory);
+        Category GetMenuItemCategory(int menuItemId);
     }
 }

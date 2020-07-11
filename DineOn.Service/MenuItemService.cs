@@ -27,14 +27,22 @@ namespace DineOn.Service
         public IEnumerable<MenuItem> GetAll()
         {
             return _context.MenuItems
-                .Include(asset => asset.Category);
+                .Include(asset => asset.Category)
+                .Include(asset => asset.Rating);
+
         }
 
         public IEnumerable<MenuItem> GetAllTopPicks()
         {
-            return _context.MenuItems
-                .Include(asset => asset.Category)
+            return GetAll()
                 .Where(asset => asset.IsTopPick == true);
+        }
+
+        public IEnumerable<MenuItem> GetAvailableMenu()
+        {
+            return GetAll()
+                .Where(asset => asset.IsAvailable == true);
+
         }
 
         public IEnumerable<MenuItem> GetByCategory(int categoryId)
@@ -48,10 +56,5 @@ namespace DineOn.Service
                 .FirstOrDefault(asset => asset.MenuItemId == menuItemId);
         }
 
-        public Category GetMenuItemCategory(int menuItemId)
-        {
-            return _context.MenuItems
-                .FirstOrDefault(asset => asset.MenuItemId == menuItemId).Category;
-        }
     }
 }

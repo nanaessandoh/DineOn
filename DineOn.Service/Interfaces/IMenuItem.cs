@@ -9,9 +9,11 @@ namespace DineOn.Service.Interfaces
     {
         IEnumerable<MenuItem> GetAll();
         IEnumerable<MenuItem> GetAllTopPicks();
+        IEnumerable<MenuItem> GetAvailableMenu();
         IEnumerable<MenuItem> GetByCategory(int categoryId);
         MenuItem GetById(int menuItemId);
         void Add(MenuItem newMenuItem);
-        Category GetMenuItemCategory(int menuItemId);
+    
+        
     }
 }
