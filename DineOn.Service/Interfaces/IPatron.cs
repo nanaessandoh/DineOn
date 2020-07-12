@@ -6,5 +6,6 @@ namespace DineOn.Service.Interfaces
 {
     public interface IPatron
     {
+
     }
 }

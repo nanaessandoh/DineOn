@@ -22,8 +22,7 @@ namespace DineOn.Data.Models
         public bool IsTopPick { get; set; }
         [Required]
         public virtual Category Category { get; set; }
-        public virtual Rating Rating { get; set; }
-        public IEnumerable<Comment> Comment { get; set; }
-
+        public virtual IEnumerable<Rating> Rating { get; set; }
+        public virtual IEnumerable<Comment> Comment { get; set; }
     }
 }

@@ -2,11 +2,15 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using DineOn.Data;
+using DineOn.Service;
+using DineOn.Service.Interfaces;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -33,6 +37,16 @@ namespace DineOn.Web
 
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
+
+
+            services.AddSingleton(Configuration);
+            services.AddDbContext<DineOnDBContext>(options
+                => options.UseSqlServer(Configuration.GetConnectionString("DineOnConnection")));
+            services.AddScoped<IMenuItem, MenuItemService>();
+            services.AddScoped<ICategory, CategoryService>();
+            services.AddScoped<IComment, CommentService>();
+            services.AddScoped<IRating, RatingService>();
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
