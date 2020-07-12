@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DineOn.Data.Migrations
 {
     [DbContext(typeof(DineOnDBContext))]
-    [Migration("20200712191030_Initial Model Migration")]
+    [Migration("20200712233342_Initial Model Migration")]
     partial class InitialModelMigration
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
