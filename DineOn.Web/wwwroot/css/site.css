@@ -1,1 +1,24 @@
-﻿
+﻿.bgimage {
+    width: 100%;
+    height: 500px;
+    background: url('../images/home/restaurant.jpg');
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: auto;
+    background-attachment: fixed;
+}
+
+.bgimage h5 {
+    color: white;
+    text-shadow: 2px 2px #333;
+}
+
+
+.hero-text {
+    text-align: center;
+    position: absolute;
+    top: 35%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: white;
+}

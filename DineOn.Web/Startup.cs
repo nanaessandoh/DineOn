@@ -65,7 +65,6 @@ namespace DineOn.Web
             app.UseHttpsRedirection();
             app.UseStaticFiles();
             app.UseCookiePolicy();
-
             app.UseMvcWithDefaultRoute();
         }
     }
