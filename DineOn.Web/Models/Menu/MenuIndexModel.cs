@@ -8,7 +8,7 @@ namespace DineOn.Web.Models.Menu
 {
     public class MenuIndexModel
     {
-        public IEnumerable<MenuItem> Snacks;
+        public IEnumerable<MenuItem> Starters;
         public IEnumerable<MenuItem> Burgers;
         public IEnumerable<MenuItem> Mexican;
         public IEnumerable<MenuItem> Pizzas;

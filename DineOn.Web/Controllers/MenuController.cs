@@ -29,7 +29,7 @@ namespace DineOn.Web.Controllers
                 Desserts = _menuService.GetByCategoryName("Dessert"),
                 Mexican =  _menuService.GetByCategoryName("Mexican"),
                 Pizzas = _menuService.GetByCategoryName("Pizza"),
-                Snacks = _menuService.GetByCategoryName("Starter"),
+                Starters = _menuService.GetByCategoryName("Starter"),
                 Vegetarian = _menuService.GetByCategoryName("Vegetarian")
             };
 

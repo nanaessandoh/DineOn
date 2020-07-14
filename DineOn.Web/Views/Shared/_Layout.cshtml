@@ -10,7 +10,7 @@
         <link rel="stylesheet" href="~/css/site.css" />
     </environment>
     <environment exclude="Development">
-        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css"
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
               asp-fallback-href="~/lib/bootstrap/dist/css/bootstrap.min.css"
               asp-fallback-test-class="sr-only" asp-fallback-test-property="position" asp-fallback-test-value="absolute" />
         <link rel="stylesheet" href="~/css/site.min.css" asp-append-version="true"/>
@@ -45,11 +45,11 @@
     </nav>
     <partial name="_CookieConsentPartial" />
 
-    <div class="container body-content">
+    <div class="container">
         @RenderBody()
         <hr />
         <footer>
-            <p> &copy; @DateTime.Now.Year - DineOn - <a href="http://www.nanaessandoh.com/" target="_blank">Nana Essandoh</a></p>
+            <p> &copy; @DateTime.Now.Year - DineOn Restaurant - <a href="http://www.nanaessandoh.com/" target="_blank">Nana Essandoh</a></p>
         </footer>
     </div>
 

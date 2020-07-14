@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace DineOn.Web.Models.Menu
 {
-    public class SnackModel
+    public class StarterModel
     {
     }
 }

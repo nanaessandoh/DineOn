@@ -3,3 +3,207 @@
 @{
     ViewData["Title"] = "Menu";
 }
+
+<div class="row">
+    <div class="clearfix">
+        <p class="display-3">Menu</p>
+    </div>
+</div>
+
+
+
+@if (Model.Starters.Count() != 0)
+{
+    <div class="row mb-3">
+        <div class="clearfix">
+            <h2 class="text-muted">&nbsp;&nbsp;Starters</h2>
+        </div>
+    </div>
+
+    <div class="card-columns">
+
+        @foreach (var asset in Model.Starters)
+        {
+            <div class="card">
+                <div class="row no-gutters">
+                    <div class="col-md-8">
+                        <div class="card-body">
+                            <h6><strong>@asset.Name</strong></h6>
+                            <div class="text-truncate text-muted">
+                                <small>@asset.Description</small>
+                            </div>
+                            <p>$@asset.Price</p>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <img src="@asset.ImageUrl" class="card-img" alt="...">
+                    </div>
+                </div>
+            </div>
+        }
+        <br />
+    </div>
+}
+
+
+@if (Model.Burgers.Count() != 0)
+{
+    <div class="row mb-3">
+        <div class="clearfix">
+            <h2 class="text-muted">&nbsp;&nbsp;Burgers</h2>
+        </div>
+    </div>
+
+    <div class="card-columns">
+
+        @foreach (var asset in Model.Burgers)
+        {
+            <div class="card">
+                <div class="row no-gutters">
+                    <div class="col-md-8">
+                        <div class="card-body">
+                            <h6><strong>@asset.Name</strong></h6>
+                            <div class="text-truncate text-muted">
+                                <small>@asset.Description</small>
+                            </div>
+                            <p>$@asset.Price</p>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <img src="@asset.ImageUrl" class="card-img" alt="...">
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+}
+
+
+@if (Model.Pizzas.Count() != 0)
+{
+    <div class="row mb-3">
+        <div class="clearfix">
+            <h2 class="text-muted">&nbsp;&nbsp;Pizzas</h2>
+        </div>
+    </div>
+
+    <div class="card-columns">
+
+        @foreach (var asset in Model.Pizzas)
+        {
+            <div class="card">
+                <div class="row no-gutters">
+                    <div class="col-md-8">
+                        <div class="card-body">
+                            <h6><strong>@asset.Name</strong></h6>
+                            <div class="text-truncate text-muted">
+                                <small>@asset.Description</small>
+                            </div>
+                            <p>$@asset.Price</p>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <img src="@asset.ImageUrl" class="card-img" alt="...">
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+}
+
+@if (Model.Vegetarian.Count() != 0)
+{
+    <div class="row mb-3">
+        <div class="clearfix">
+            <h2 class="text-muted">&nbsp;&nbsp;Vegetarian</h2>
+        </div>
+    </div>
+
+    <div class="card-columns">
+
+        @foreach (var asset in Model.Vegetarian)
+        {
+            <div class="card">
+                <div class="row no-gutters">
+                    <div class="col-md-8">
+                        <div class="card-body">
+                            <h6><strong>@asset.Name</strong></h6>
+                            <div class="text-truncate text-muted">
+                                <small>@asset.Description</small>
+                            </div>
+                            <p>$@asset.Price</p>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <img src="@asset.ImageUrl" class="card-img" alt="...">
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+}
+
+@if (Model.Mexican.Count() != 0)
+{
+    <div class="row mb-3">
+        <div class="clearfix">
+            <h2 class="text-muted">&nbsp;&nbsp;Mexican</h2>
+        </div>
+    </div>
+
+    <div class="card-columns">
+
+        @foreach (var asset in Model.Mexican)
+        {
+            <div class="card">
+                <div class="row no-gutters">
+                    <div class="col-md-8">
+                        <div class="card-body">
+                            <h6><strong>@asset.Name</strong></h6>
+                            <div class="text-truncate text-muted">
+                                <small>@asset.Description</small>
+                            </div>
+                            <p>$@asset.Price</p>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <img src="@asset.ImageUrl" class="card-img" alt="...">
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+}
+
+
+@if (Model.Desserts.Count() != 0)
+{
+    <div class="row mb-3">
+        <div class="clearfix">
+            <h2 class="text-muted">&nbsp;&nbsp;Desserts</h2>
+        </div>
+    </div>
+
+    <div class="card-columns">
+
+        @foreach (var asset in Model.Desserts)
+        {
+            <div class="card">
+                <div class="row no-gutters">
+                    <div class="col-md-8">
+                        <div class="card-body">
+                            <h6><strong>@asset.Name</strong></h6>
+                            <div class="text-truncate text-muted">
+                                <small>@asset.Description</small>
+                            </div>
+                            <p>$@asset.Price</p>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <img src="@asset.ImageUrl" class="card-img" alt="...">
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+}
