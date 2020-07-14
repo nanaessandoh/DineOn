@@ -4,7 +4,7 @@
     background: url('../images/home/restaurant.jpg');
     background-repeat: no-repeat;
     background-position: center;
-    background-size: auto;
+    background-size: contain;
     background-attachment: fixed;
 }
 

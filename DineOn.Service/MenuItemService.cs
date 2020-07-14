@@ -45,9 +45,9 @@ namespace DineOn.Service
 
         }
 
-        public IEnumerable<MenuItem> GetByCategory(int categoryId)
+        public IEnumerable<MenuItem> GetByCategoryName(string categoryName)
         {
-            return GetAll().Where(asset => asset.Category.CategoryId == categoryId);
+            return GetAll().Where(asset => asset.Category.Name == categoryName);
         }
 
         public MenuItem GetById(int menuItemId)
