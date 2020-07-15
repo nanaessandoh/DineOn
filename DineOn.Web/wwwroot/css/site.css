@@ -1,16 +1,15 @@
-﻿.bgimage {
+﻿.hero-banner {
     width: 100%;
     height: 100%;
-    background: url('../images/home/restaurant.jpg');
+    padding: 40vh;
+}
+
+.bg-img {
+    background: url('/images/home/restaurant.jpg');
     background-repeat: no-repeat;
     background-position: center;
     background-size: cover;
     background-attachment: fixed;
-}
-
-.bgimage h5 {
-    color: white;
-    text-shadow: 2px 2px #333;
 }
 
 
@@ -69,4 +68,18 @@ for details on configuring this project to bundle and minify static web assets. 
     background: #fbfafd;
 }
 
+.navbar .nav-item:not(:last-child) {
+    margin-right: 35px;
+}
 
+.dropdown-toggle::after {
+    transition: transform 0.15s linear;
+}
+
+.show.dropdown .dropdown-toggle::after {
+    transform: translateY(3px);
+}
+
+.dropdown-menu {
+    margin-top: 0;
+}

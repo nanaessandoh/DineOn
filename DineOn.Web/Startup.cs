@@ -37,12 +37,10 @@ namespace DineOn.Web
 
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
-
-
-            services.AddSingleton(Configuration);
             services.AddDbContext<DineOnDBContext>(options
                 => options.UseSqlServer(Configuration.GetConnectionString("DineOnConnection")));
             services.AddScoped<IMenuItem, MenuItemService>();
+            services.AddTransient<MenuItemService>();
             services.AddScoped<ICategory, CategoryService>();
             services.AddScoped<IComment, CommentService>();
             services.AddScoped<IRating, RatingService>();

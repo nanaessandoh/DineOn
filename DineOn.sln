@@ -5,9 +5,9 @@ VisualStudioVersion = 16.0.30225.117
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DineOn.Web", "DineOn.Web\DineOn.Web.csproj", "{D1972B9D-4A69-4FB9-B4CC-7D6C6DEF943E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DineOn.Service", "DineOn.Service\DineOn.Service.csproj", "{1DE3FDFB-D1FA-4EC5-8580-38D794D0C460}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DineOn.Service", "DineOn.Service\DineOn.Service.csproj", "{1DE3FDFB-D1FA-4EC5-8580-38D794D0C460}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DineOn.Data", "DineOn.Data\DineOn.Data.csproj", "{4B052492-C75A-4AD5-8C3C-A47DFB3A601D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DineOn.Data", "DineOn.Data\DineOn.Data.csproj", "{4B052492-C75A-4AD5-8C3C-A47DFB3A601D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

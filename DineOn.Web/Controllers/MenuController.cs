@@ -12,11 +12,13 @@ namespace DineOn.Web.Controllers
     {
 
         private readonly IMenuItem _menuService;
+        private readonly IRating _ratingService;
 
         // Constructor to enable us access IVehicleRentalAsset object
-        public MenuController(IMenuItem menuService)
+        public MenuController(IMenuItem menuService, IRating ratingService)
         {
             _menuService = menuService;
+            _ratingService = ratingService;
 
         }
 
@@ -35,5 +37,71 @@ namespace DineOn.Web.Controllers
 
             return View(model);
         }
+
+
+        public IActionResult Burger()
+        {
+            var model = new CategoryModel
+            {
+                CategoryMenuItems = _menuService.GetByCategoryName("Burger"),
+            };
+
+            return View(model);
+        }
+
+        public IActionResult Dessert()
+        {
+            var model = new CategoryModel
+            {
+                CategoryMenuItems = _menuService.GetByCategoryName("Dessert"),
+            };
+
+            return View(model);
+        }
+
+
+        public IActionResult Mexican()
+        {
+            var model = new CategoryModel
+            {
+                CategoryMenuItems = _menuService.GetByCategoryName("Mexican"),
+            };
+
+            return View(model);
+        }
+
+        public IActionResult Pizza()
+        {
+            var model = new CategoryModel
+            {
+                CategoryMenuItems = _menuService.GetByCategoryName("Pizza"),
+            };
+
+            return View(model);
+        }
+
+        public IActionResult Starter()
+        {
+            var model = new CategoryModel
+            {
+                CategoryMenuItems = _menuService.GetByCategoryName("Starter"),
+            };
+
+            return View(model);
+        }
+
+        public IActionResult Vegetarian()
+        {
+            var model = new CategoryModel
+            {
+                CategoryMenuItems = _menuService.GetByCategoryName("Vegetarian"),
+            };
+
+            return View(model);
+        }
+
+
+
+
     }
 }
