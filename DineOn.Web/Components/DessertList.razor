@@ -1,0 +1,78 @@
+﻿@using Microsoft.AspNetCore.Components.Web
+@using DineOn.Data.Models
+@using DineOn.Service.Interfaces
+@inject IMenuItem MenuService
+
+
+<div class="card-columns">
+    @foreach (var product in MenuService.GetAll())
+    {
+        <div class="card">
+            <a @onclick="asset => SelectProduct(product.MenuItemId)" data-toggle="modal" data-target="#productModal">
+                <div class="card-img" style="background-image: url('@product.ImageUrl');"></div>
+            </a>
+            <div class="card-body"><h5 class="card-title">@product.Name</h5></div>
+            <div class="text-center">
+                <small class="text-muted ">
+                    <button @onclick="asset => SelectProduct(product.MenuItemId)" data-toggle="modal" data-target="#productModal" class="btn btn-outline-dark">More Info</button>
+                </small>
+            </div>
+            <p></p>
+        </div>
+    }
+
+</div>
+
+
+
+@code {
+    MenuItem selectedProduct;
+    int selectedProductId;
+
+    void SelectProduct(int productMenuItemId)
+    {
+        selectedProductId = productMenuItemId;
+        selectedProduct = MenuService.GetAll().First(x => x.MenuItemId == productMenuItemId);
+    }
+
+
+
+
+
+
+}
+
+
+<div class="modal fade" id="productModal" tabindex="-1" role="dialog" aria-labelledby="productTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+
+            @if (selectedProduct != null)
+            {
+                <div class="modal-header">
+                    <h5 class="modal-title" id="productTitle">@selectedProduct.Name</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="card">
+                        <div class="card-img" style="background-image: url('@selectedProduct.ImageUrl');">
+                        </div>
+                        <div class="card-body">
+                            <h5>Description</h5>
+                            <p class="card-text">@selectedProduct.Description</p>
+                            <div class="row">
+                                <div class="col-5 h5">Price: @selectedProduct.Price</div>
+                                <div class="col-7 h5"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+
+                </div>
+            }
+        </div>
+    </div>
+</div>

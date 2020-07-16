@@ -41,10 +41,10 @@ namespace DineOn.Web
 
 
             services.AddDbContext<DineOnDBContext>(options => options.UseSqlServer(Configuration.GetConnectionString("DineOnConnection")));
-            services.AddScoped<IMenuItem, MenuItemService>();
-            services.AddScoped<ICategory, CategoryService>();
-            services.AddScoped<IComment, CommentService>();
-            services.AddScoped<IRating, RatingService>();
+            services.AddTransient<IMenuItem, MenuItemService>();
+            services.AddTransient<ICategory, CategoryService>();
+            services.AddTransient<IComment, CommentService>();
+            services.AddTransient<IRating, RatingService>();
 
         }
 

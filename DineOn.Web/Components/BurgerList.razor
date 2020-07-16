@@ -24,7 +24,7 @@
     @foreach (var asset in MenuService.GetByCategoryName("Burger"))
     {
         <div class="card">
-            <a class="stretched-link" data-toggle="modal" data-target="#menuItemDetail" @onclick="menuItem => SelectMenuItem(asset.MenuItemId)">
+            <a class="stretched-link" @onclick="e => SelectMenuItem(asset.Name)" data-toggle="modal" data-target="#menuItemDetail">
                 <div class="row no-gutters">
                     <div class="col-md-8">
                         <div class="card-body">
@@ -47,15 +47,16 @@
 @code {
 
     MenuItem selectedMenuItem;
-    int selectedMenuItemId;
 
-    void SelectMenuItem(int menuItemId)
+    string selectedMenuItemId;
+
+    void SelectMenuItem(string menuItemName)
     {
-        selectedMenuItemId = menuItemId;
+        selectedMenuItemId = menuItemName;
         // Select the menu item
-        selectedMenuItem = MenuService.GetById(menuItemId);
+        selectedMenuItem = MenuService.GetByCategoryName("Burger").First(x => x.Name == menuItemName);
         // Get the rating of the menu item
-        GetCurrentRating();
+        //  GetCurrentRating();
     }
 
 
@@ -63,28 +64,28 @@
     int voteCount = 0;
     string voteLabel;
 
-    void GetCurrentRating()
-    {
-        if ( RatingService.GetNumberofRatings(selectedMenuItemId) == 0)
-        {
-            currentRating = 0;
-            voteCount = 0;
-        }
-        else
-        {
-            voteCount = RatingService.GetNumberofRatings(selectedMenuItemId);
-            voteLabel = voteCount > 1 ? "Votes" : "Vote";
-            currentRating = RatingService.GetAverageRating(selectedMenuItemId);
-        }
+    //void GetCurrentRating()
+    //{
+    //    if ()
+    //    {
+    //        currentRating = 0;
+    //        voteCount = 0;
+    //    }
+    //    else
+    //    {
+    //        voteCount = RatingService.GetNumberofRatings(selectedMenuItemId);
+    //        voteLabel = voteCount > 1 ? "Votes" : "Vote";
+    //        currentRating = RatingService.GetAverageRating(selectedMenuItemId);
+    //    }
 
-    }
+    //}
 
-    void SubmitRating(int rating)
-    {
-        RatingService.AddRating(rating, selectedMenuItem.MenuItemId);
-        // Update Modal
-        SelectMenuItem(selectedMenuItem.MenuItemId);
-    }
+    //void SubmitRating(int rating)
+    //{
+    //    RatingService.AddRating(rating, selectedMenuItem.MenuItemId);
+    //    // Update Modal
+    //    SelectMenuItem(selectedMenuItem.MenuItemId);
+    //}
 
 }
 
@@ -127,7 +128,7 @@
                     }
                     @for (int i = 1; i < 6; i++)
                     {
-                        var currentStar = i;
+                        @*var currentStar = i;
                         if (i <= currentRating)
                         {
                             <span class="fa fa-star" style="color:gold" @onclick="(e => SubmitRating(currentStar))"></span>
@@ -135,7 +136,7 @@
                         else
                         {
                             <span class="fa fa-star" @onclick="(e => SubmitRating(currentStar))"></span>
-                        }
+                        }*@
                     }
                 </div>
             }
