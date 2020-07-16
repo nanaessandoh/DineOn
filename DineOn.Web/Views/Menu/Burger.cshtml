@@ -3,20 +3,6 @@
 
 
 
-<div class="row">
-    <div class="clearfix">
-        <p class="display-3">Menu</p>
-    </div>
-</div>
-
-
-<div class="row mb-3">
-    <div class="clearfix">
-        <h2 class="text-muted">&nbsp;&nbsp;Burgers</h2>
-    </div>
-</div>
-
-
 @(await Html.RenderComponentAsync<BurgerList>(RenderMode.ServerPrerendered))
 
 <script src="_framework/blazor.server.js"></script>

@@ -2,7 +2,21 @@
 @using DineOn.Data.Models
 @using DineOn.Service.Interfaces
 @inject IMenuItem MenuService
+@inject IRating RatingService
 
+
+<div class="row">
+    <div class="clearfix">
+        <p class="display-3">Menu</p>
+    </div>
+</div>
+
+
+<div class="row mb-3">
+    <div class="clearfix">
+        <h2 class="text-muted">&nbsp;&nbsp;Burgers</h2>
+    </div>
+</div>
 
 
 <div class="card-columns">
@@ -10,43 +24,121 @@
     @foreach (var asset in MenuService.GetByCategoryName("Burger"))
     {
         <div class="card">
-            <a class="stretched-link" data-toggle="modal" data-target="#menuItemDetail" @onclick="menuItem => SelectProduct(asset.MenuItemId)"></a>
-            <div class="row no-gutters">
-                <div class="col-md-8">
-                    <div class="card-body">
-                        <h6><strong>@asset.Name</strong></h6>
-                        <div class="text-truncate text-muted">
-                            <small>@asset.Description</small>
+            <a class="stretched-link" data-toggle="modal" data-target="#menuItemDetail" @onclick="menuItem => SelectMenuItem(asset.MenuItemId)">
+                <div class="row no-gutters">
+                    <div class="col-md-8">
+                        <div class="card-body">
+                            <h6><strong>@asset.Name</strong></h6>
+                            <div class="text-truncate text-muted">
+                                <small>@asset.Description</small>
+                            </div>
+                            <p>$@asset.Price</p>
                         </div>
-                        <p>$@asset.Price</p>
+                    </div>
+                    <div class="col-md-4">
+                        <img src="@asset.ImageUrl" class="card-img" alt="...">
                     </div>
                 </div>
-                <div class="col-md-4">
-                    <img src="@asset.ImageUrl" class="card-img" alt="...">
-                </div>
-            </div>
+            </a>
         </div>
     }
 </div>
 
 @code {
 
+    MenuItem selectedMenuItem;
+    int selectedMenuItemId;
 
-
-    void SelectProduct(int productId)
+    void SelectMenuItem(int menuItemId)
     {
-
+        selectedMenuItemId = menuItemId;
+        // Select the menu item
+        selectedMenuItem = MenuService.GetById(menuItemId);
+        // Get the rating of the menu item
+        GetCurrentRating();
     }
+
+
+    int currentRating = 0;
+    int voteCount = 0;
+    string voteLabel;
 
     void GetCurrentRating()
     {
-
+        if ( RatingService.GetNumberofRatings(selectedMenuItemId) == 0)
+        {
+            currentRating = 0;
+            voteCount = 0;
+        }
+        else
+        {
+            voteCount = RatingService.GetNumberofRatings(selectedMenuItemId);
+            voteLabel = voteCount > 1 ? "Votes" : "Vote";
+            currentRating = RatingService.GetAverageRating(selectedMenuItemId);
+        }
 
     }
 
     void SubmitRating(int rating)
     {
-
+        RatingService.AddRating(rating, selectedMenuItem.MenuItemId);
+        // Update Modal
+        SelectMenuItem(selectedMenuItem.MenuItemId);
     }
 
 }
+
+
+<div class="modal fade" id="menuItemDetail" tabindex="-1" role="dialog" aria-labelledby="menuItemTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+
+            @if (selectedMenuItem != null)
+            {
+                <div class="modal-header">
+                    <h5 class="modal-title" id="productTitle">@selectedMenuItem.Name</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="card">
+                        <div class="card-img" style="background-image: url('@selectedMenuItem.ImageUrl');">
+                        </div>
+                        <div class="card-body">
+                            <h5>Description</h5>
+                            <p class="card-text">@selectedMenuItem.Description</p>
+                            <div class="row">
+                                <div class="col-5 h5">Price: @selectedMenuItem.Price</div>
+                                <div class="col-7 h5"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+
+                    @if (voteCount == 0)
+                    {
+                        <span>Leave a rating!</span>
+                    }
+                    else
+                    {
+                        <span>@voteCount @voteLabel</span>
+                    }
+                    @for (int i = 1; i < 6; i++)
+                    {
+                        var currentStar = i;
+                        if (i <= currentRating)
+                        {
+                            <span class="fa fa-star" style="color:gold" @onclick="(e => SubmitRating(currentStar))"></span>
+                        }
+                        else
+                        {
+                            <span class="fa fa-star" @onclick="(e => SubmitRating(currentStar))"></span>
+                        }
+                    }
+                </div>
+            }
+        </div>
+    </div>
+</div>
