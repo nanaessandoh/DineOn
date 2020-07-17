@@ -1,6 +1,4 @@
-﻿using DineOn.Data;
-using DineOn.Data.Models;
-using DineOn.Service.Interfaces;
+﻿using DineOn.Web.Models;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -10,7 +8,7 @@ using System.Text;
 
 namespace DineOn.Service
 {
-    public class CategoryService : ICategory
+    public class CategoryService
     {
         // Create DbContext private field  
         private readonly DineOnDBContext _context;
@@ -32,10 +30,11 @@ namespace DineOn.Service
         }
 
 
-        public Category GetMenuItemCategory(int menuItemId)
+        public string GetMenuItemCategoryName(int categoryId)
         {
-            return _context.MenuItems
-                .FirstOrDefault(asset => asset.MenuItemId == menuItemId).Category;
+            return _context.Categories
+                .FirstOrDefault(asset => asset.CategoryId == categoryId).Name;
         }
+
     }
 }

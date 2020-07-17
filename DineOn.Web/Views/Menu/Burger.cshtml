@@ -1,7 +1,4 @@
-﻿@model DineOn.Web.Models.Menu.CategoryModel
-@{
-    ViewData["Title"] = "Burgers";
-}
+﻿
 
 
 @if (Model.CategoryMenuItems.Count() != 0)
@@ -25,7 +22,7 @@
             @foreach (var asset in Model.CategoryMenuItems)
             {
             <div class="card">
-                <a class="modal-trigger stretched-link" asp-controller="Menu" asp-action="Detail" asp-route-menuItemId="@asset.MenuItemId"></a>
+                <a class="stretched-link"></a>
                 <div class="row no-gutters">
                     <div class="col-md-8">
                         <div class="card-body">

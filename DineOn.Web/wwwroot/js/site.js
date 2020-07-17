@@ -25,19 +25,3 @@ $(window).on("load resize", function () {
 });
 
 
-// This Function Checks for any anchor tag (<a></a>)
-// with class modal-trigger. When the anchor tag is clicked it 
-// launches a modal whose header has been declared in the .cshtml file.
-// The modal is defined in a partial view and renderred in the controller
-$(document).ready(function () {
-
-    $('.modal-trigger').click(function () {
-        var url = $('#menuItemModal').data('url');
-        $.get(url, function (data) {
-            $("#menuItemModal").html(data);
-            $("#menuItemModal").modal('show');
-
-        });
-    });
-
-});
