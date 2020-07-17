@@ -1,4 +1,3 @@
-﻿using DineOn.Service;
 using DineOn.Web.Models;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -38,6 +37,7 @@ namespace DineOn.Web
                 => options.UseSqlServer(Configuration.GetConnectionString("DineOnConnection")));
             services.AddTransient<MenuItemService>();
             services.AddTransient<CategoryService>();
+
 
         }
 
