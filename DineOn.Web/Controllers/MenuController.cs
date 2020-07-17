@@ -100,8 +100,31 @@ namespace DineOn.Web.Controllers
             return View(model);
         }
 
+        public IActionResult Detail(int menuItemId)
+        {
+            var asset = _menuService.GetById(menuItemId);
+
+            var model = new MenuItemDetailModel  
+            {
+               MenuItemId = asset.MenuItemId,
+               Name = asset.Name,
+               Description = asset.Description,
+               ImageUrl = asset.ImageUrl,
+               Price = asset.Price,
+               AverageRating = _ratingService.GetAverageRating(menuItemId),
+               NumberOfRatings = _ratingService.GetNumberofRatings(menuItemId)
+            };
+
+            return PartialView(model);
+        }
 
 
+
+        public IActionResult viewDetail()
+        {
+
+            return PartialView();
+        }
 
     }
 }
