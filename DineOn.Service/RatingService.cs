@@ -33,7 +33,13 @@ namespace DineOn.Service
 
         public int GetAverageRating(int menuItemId)
         {
-           return Convert.ToInt32(GetMenuItemRating(menuItemId).Average());
+            var item = GetMenuItemRating(menuItemId);
+            if (!item.Any())
+            {
+                return 0;
+            }
+
+           return Convert.ToInt32(item.Average());
         }
 
         public IEnumerable<Rating> GetAll()
@@ -44,7 +50,12 @@ namespace DineOn.Service
 
         public List<int> GetMenuItemRating(int menuItemId)
         {
-            return _context.Ratings.Where(asset => asset.MenuItem.MenuItemId == menuItemId).Select(asset => asset.RatingValue).ToList();
+            var item = _context.Ratings.Where(asset => asset.MenuItem.MenuItemId == menuItemId).Select(asset => asset.RatingValue).ToList();
+            if (item == null)
+            {
+                return (new List<int>());
+            }
+            return item; 
         }
 
         public int GetNumberofRatings(int menuItemId)
