@@ -10,7 +10,6 @@ namespace DineOn.Web.Models
     public class MenuItem
     {
         public int MenuItemId { get; set; }
-        [JsonPropertyName("img")]
         public string Name { get; set; }
         public string ImageUrl { get; set; }
         public int CategoryId { get; set; }

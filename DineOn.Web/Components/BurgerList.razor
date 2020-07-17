@@ -1,4 +1,6 @@
-﻿@inject DineOn.Service.MenuItemService menuService
+﻿@using Microsoft.AspNetCore.Components.Web
+@using DineOn.Web.Models
+@inject DineOn.Service.MenuItemService menuService
 
 
 
@@ -23,7 +25,7 @@
         @foreach (var asset in menuService.GetBurger())
         {
             <div class="card">
-                <a class="stretched-link"></a>
+                @*<a @onclick="e => SelectMenuItem(asset.Name)" data-toggle="modal" data-target="#productModal" class="stretched-link"></a>*@
                 <div class="row no-gutters">
                     <div class="col-md-8">
                         <div class="card-body">
@@ -32,6 +34,9 @@
                                 <small>@asset.Description</small>
                             </div>
                             <p>$@asset.Price</p>
+                        </div>
+                        <div class="card-footer">
+                            <button @onclick="e => SelectMenuItem(asset.Name)" data-toggle="modal" data-target="#productModal" class="btn btn-outline-dark">More Info</button>
                         </div>
                     </div>
                     <div class="col-md-4">
@@ -54,12 +59,105 @@ else
 
     <div class="row mb-3">
         <div class="clearfix">
-            <h2 class="text-muted">&nbsp;&nbsp;Sorry there are no burgers in our Menu at the moment</h2>
+            <h2 class="text-muted">&nbsp;&nbsp;Sorry there are no burgers in our menu at the moment</h2>
         </div>
     </div>
 }
 
 
 @code {
+    MenuItem selectedMenuItem;
+    string selectedItem;
+
+    void SelectMenuItem(string itemName)
+    {
+        selectedItem = itemName;
+        selectedMenuItem = menuService.GetBurger().First(asset => asset.Name == itemName);
+        GetCurrentRating();
+    }
+
+    int currentRating = 0;
+    int voteCount = 0;
+    string voteLabel;
+
+    void GetCurrentRating()
+    {
+
+        if (selectedMenuItem.Ratings == null)
+        {
+            currentRating = 0;
+            voteCount = 0;
+        }
+        else
+        {
+            voteCount = selectedMenuItem.Ratings.Count();
+            voteLabel = voteCount > 1 ? "Votes" : "Vote";
+            currentRating = selectedMenuItem.Ratings.Sum() / voteCount;
+        }
+
+        System.Console.WriteLine($"Current rating for {selectedMenuItem.Name}: {currentRating}");
+    }
+
+    void SubmitRating(int rating)
+    {
+        System.Console.WriteLine($"Rating reveived for {selectedMenuItem.Name}:{rating}");
+        menuService.AddRating(selectedMenuItem.MenuItemId, rating);
+        SelectMenuItem(selectedMenuItem.Name);
+    }
 
 }
+
+
+<div class="modal fade" id="productModal" tabindex="-1" role="dialog" aria-labelledby="productTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+
+            @if (selectedMenuItem != null)
+            {
+                <div class="modal-header">
+                    <h5 class="modal-title" id="productTitle">@selectedMenuItem.Name</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="card">
+                        <div class="card-img" style="background-image: url('@selectedMenuItem.ImageUrl');">
+                        </div>
+                        <div class="card-body">
+                            <h5>Description</h5>
+                            <p class="card-text">@selectedMenuItem.Description</p>
+                            <div class="row">
+                                <div class="col-5 h5">Price: @selectedMenuItem.Price</div>
+                                <div class="col-7 h5"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+
+                    @if (voteCount == 0)
+                    {
+                        <span>Leave a rating!</span>
+                    }
+                    else
+                    {
+                        <span>@voteCount @voteLabel</span>
+                    }
+                    @for (int i = 1; i < 6; i++)
+                    {
+                        var currentStar = i;
+                        if (i <= currentRating)
+                        {
+                            <span class="fa fa-star" style="color:gold" @onclick="(e => SubmitRating(currentStar))"></span>
+                        }
+                        else
+                        {
+                            <span class="fa fa-star" @onclick="(e => SubmitRating(currentStar))"></span>
+                        }
+                    }
+                </div>
+            }
+        </div>
+    </div>
+</div>

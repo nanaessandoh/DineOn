@@ -1,3 +1,4 @@
+using DineOn.Service;
 using DineOn.Web.Models;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;

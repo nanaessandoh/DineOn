@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using DineOn.Web.Models.Menu;
+using DineOn.Service;
 using Microsoft.AspNetCore.Mvc;
 
 namespace DineOn.Web.Controllers
