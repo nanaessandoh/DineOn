@@ -1,9 +1,7 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using DineOn.Service;
-using DineOn.Service.Interfaces;
 using DineOn.Web.Models.Menu;
 using Microsoft.AspNetCore.Mvc;
 
@@ -12,15 +10,12 @@ namespace DineOn.Web.Controllers
     public class MenuController : Controller
     {
 
-        private readonly IMenuItem _menuService;
-        private readonly IRating _ratingService;
+        private readonly MenuItemService _menuService;
 
         // Constructor to enable us access IVehicleRentalAsset object
-        public MenuController(IMenuItem menuService, IRating ratingService)
+        public MenuController(MenuItemService menuService)
         {
             _menuService = menuService;
-            _ratingService = ratingService;
-
         }
 
 
@@ -33,15 +28,14 @@ namespace DineOn.Web.Controllers
 
         public IActionResult Burger()
         {
-            
-           ViewData["Title"] = "Burgers";  
+            ViewData["Title"] = "Burgers";
             return View();
         }
 
         public IActionResult Dessert()
         {
-            ViewData["Title"] = "Desserts";
-            return View(); ;
+            ViewData["Title"] = "Dessert";
+            return View();
         }
 
 
@@ -53,13 +47,13 @@ namespace DineOn.Web.Controllers
 
         public IActionResult Pizza()
         {
-            ViewData["Title"] = "Pizzas";
+            ViewData["Title"] = "Pizza";
             return View();
         }
 
         public IActionResult Starter()
         {
-            ViewData["Title"] = "Starters";
+            ViewData["Title"] = "Starter";
             return View();
         }
 
@@ -68,8 +62,6 @@ namespace DineOn.Web.Controllers
             ViewData["Title"] = "Vegetarian";
             return View();
         }
-
-
 
 
     }

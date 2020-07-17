@@ -1,6 +1,8 @@
-﻿
+﻿@inject DineOn.Service.MenuItemService menuService
 
-@if (Model.CategoryMenuItems.Count() != 0)
+
+
+@if (menuService.GetBurger().Any())
 {
     <div class="row">
         <div class="clearfix">
@@ -11,15 +13,17 @@
 
     <div class="row mb-3">
         <div class="clearfix">
-            <h2 class="text-muted">&nbsp;&nbsp;Vegetarian</h2>
+            <h2 class="text-muted">&nbsp;&nbsp;Burgers</h2>
         </div>
     </div>
 
+
     <div class="card-columns">
 
-        @foreach (var asset in Model.CategoryMenuItems)
+        @foreach (var asset in menuService.GetBurger())
         {
             <div class="card">
+                <a class="stretched-link"></a>
                 <div class="row no-gutters">
                     <div class="col-md-8">
                         <div class="card-body">
@@ -50,14 +54,12 @@ else
 
     <div class="row mb-3">
         <div class="clearfix">
-            <h2 class="text-muted">&nbsp;&nbsp;Sorry there are no vegetarian dishes in our Menu at the moment</h2>
+            <h2 class="text-muted">&nbsp;&nbsp;Sorry there are no burgers in our Menu at the moment</h2>
         </div>
     </div>
 }
 
 
+@code {
 
-
-
-
-
+}

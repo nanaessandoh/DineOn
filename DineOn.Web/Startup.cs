@@ -1,14 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using DineOn.Data;
-using DineOn.Service;
-using DineOn.Service.Interfaces;
+using DineOn.Web.Models;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -42,10 +35,9 @@ namespace DineOn.Web
 
             services.AddDbContext<DineOnDBContext>(options
                 => options.UseSqlServer(Configuration.GetConnectionString("DineOnConnection")));
-            services.AddScoped<IMenuItem, MenuItemService>();
-            services.AddScoped<ICategory, CategoryService>();
-            services.AddScoped<IComment, CommentService>();
-            services.AddScoped<IRating, RatingService>();
+            services.AddTransient<MenuItemService>();
+            services.AddTransient<CategoryService>();
+
 
         }
 
