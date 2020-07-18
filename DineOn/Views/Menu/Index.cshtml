@@ -1,0 +1,7 @@
+﻿@page
+@using DineOn.Components
+
+
+@(await Html.RenderComponentAsync<FullMenuList>(RenderMode.ServerPrerendered))
+
+<script src="_framework/blazor.server.js"></script>
