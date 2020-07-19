@@ -9,6 +9,7 @@ namespace DineOn.Data
         public DineOnDBContext(DbContextOptions options) : base(options) { }
         public DbSet<MenuItem> MenuItems { get; set; }
         public DbSet<Category> Categories { get; set; }
+        public DbSet<Rating> Ratings  { get; set; }
         public DbSet<Order> Orders { get; set; }
         public DbSet<MenuItemOrder> MenuItemOrders { get; set; }
 

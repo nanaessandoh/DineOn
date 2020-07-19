@@ -1,6 +1,6 @@
 using System;
 
-namespace DineOn.Models
+namespace DineOn.Web.Models
 {
     public class ErrorViewModel
     {

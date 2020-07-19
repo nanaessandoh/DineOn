@@ -3,7 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using DineOn.Data;
-using DineOn.Services;
+using DineOn.Service;
+using DineOn.Service.Interfaces;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -31,7 +32,7 @@ namespace DineOn
             services.AddControllers();
             services.AddDbContext<DineOnDBContext>(options
                 => options.UseSqlServer(Configuration.GetConnectionString("DineOnConnection")));
-            services.AddTransient<MenuItemService>();
+            services.AddTransient<IMenuItem,MenuItemService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

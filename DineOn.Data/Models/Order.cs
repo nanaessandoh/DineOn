@@ -7,6 +7,6 @@ namespace DineOn.Data.Models
     public class Order
     {
         public int OrderId { get; set; }
-        public virtual List<MenuItemOrder> MenuItemOrders { get; set; }
+        public virtual IEnumerable<MenuItemOrder> MenuItemOrders { get; set; }
     }
 }
