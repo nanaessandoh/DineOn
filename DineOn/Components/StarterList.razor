@@ -1,0 +1,167 @@
+﻿@using Microsoft.AspNetCore.Components.Web
+@using DineOn.Data.Models
+@using DineOn.Service.Interfaces
+@inject IMenuItem menuService
+
+
+<div class="row mb-3">
+    <div class="clearfix">
+        <p class="display-3">Menu</p>
+    </div>
+</div>
+
+<div class="row mb-3">
+    <div class="clearfix">
+        <h2 class="text-muted">&nbsp;&nbsp;Starters</h2>
+    </div>
+</div>
+
+
+<div class="card-columns">
+
+
+    @if (menuService.GetStarters() != null && menuService.GetStarters().Any())
+
+    {
+
+
+        @foreach (var asset in menuService.GetStarters())
+        {
+            <div class="card">
+                <a href="#code" @onclick="e => SelectMenuItem(asset.MenuItemId)" data-toggle="modal" data-target="#menuItemModal" class="stretched-link"></a>
+                <div class="row no-gutters">
+                    <div class="col-md-8">
+                        <div class="card-body">
+                            <h6><strong>@asset.Name</strong></h6>
+                            <div class="text-truncate text-muted">
+                                <small>@asset.Description</small>
+                            </div>
+                            <p>$@asset.Price</p>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <img src="@asset.ImageUrl" class="card-img" alt="...">
+                    </div>
+                </div>
+            </div>
+        }
+    }
+    else
+    {
+
+
+        <div class="row mb-3">
+            <div class="clearfix">
+                <h2 class="text-muted">&nbsp;&nbsp;Sorry there are no starters in our menu at the moment</h2>
+            </div>
+        </div>
+    }
+
+</div>
+
+
+
+@code {
+
+    MenuItem selectedMenuItem;
+    int selectedMenuItemId;
+
+    void SelectMenuItem(int itemId)
+    {
+        selectedMenuItemId = itemId;
+        selectedMenuItem = menuService.GetMenuItem(itemId);
+        GetCurrentRating();
+    }
+
+    int currentRating = 0;
+    int voteCount = 0;
+    string voteLabel;
+
+    void GetCurrentRating()
+    {
+
+        voteCount = menuService.GetNumberOfRatings(selectedMenuItemId);
+        voteLabel = voteCount > 1 ? "Votes" : "Vote";
+        currentRating = menuService.GetAverageRating(selectedMenuItemId);
+
+    }
+
+    void SubmitRating(int rating)
+    {
+        menuService.AddRating(selectedMenuItemId, rating);
+        SelectMenuItem(selectedMenuItemId);
+    }
+
+}
+
+
+<div class="modal fade" id="menuItemModal" tabindex="-1" role="dialog" aria-labelledby="menuItemTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+
+            @if (selectedMenuItem != null)
+            {
+                <div class="modal-header">
+                    <h5 class="modal-title" id="MenuItemTitle"><strong>@selectedMenuItem.Name</strong></h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="card">
+                        <div class="card-img" style="background-image: url('@selectedMenuItem.ImageUrl');">
+                        </div>
+                        <div class="card-body">
+                            <h6>Description</h6>
+                            <p class="card-text text-muted">@selectedMenuItem.Description</p>
+                            <div class="row">
+                                <div class="col-md-3 mt-2"><p class="h5">C$@selectedMenuItem.Price</p></div>
+                                <div class="col-md-4">
+                                    <form action="">
+                                        <div class="input-group ">
+                                            <div class="input-group-prepend">
+                                                <button class="btn btn-outline-dark" type="button" id="decrease" onclick="decreaseValue()">-</button>
+                                            </div>
+                                            <input type="number" class="form-control" value="0" id="quantity">
+                                            <div class="input-group-append">
+                                                <button class="btn btn-outline-dark" type="button" id="increase" onclick="increaseValue()">+</button>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+                                <div class="col-md-5"><button class="btn btn-outline-dark">Add to Cart <i class="fa fa-shopping-cart" aria-hidden="true"></i></button></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    @if (voteCount == 0)
+                    {
+                        <span>Enjoyed this meal before? Leave a rating!</span>
+                    }
+                    else
+                    {
+                        <span>@voteCount @voteLabel</span>
+                    }
+                    @for (int i = 1; i < 6; i++)
+                    {
+                        var currentStar = i;
+                        if (i <= currentRating)
+                        {
+                            <span class="fa fa-star" style="color:gold" @onclick="(e => SubmitRating(currentStar))"></span>
+                        }
+                        else
+                        {
+                            <span class="fa fa-star" @onclick="(e => SubmitRating(currentStar))"></span>
+                        }
+                    }
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+
+
+
+

@@ -27,9 +27,9 @@ namespace DineOn
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddRazorPages();
+            services.AddControllersWithViews().AddRazorRuntimeCompilation();
+            services.AddRazorPages().AddRazorRuntimeCompilation();
             services.AddServerSideBlazor();
-            services.AddControllers();
             services.AddDbContext<DineOnDBContext>(options
                 => options.UseSqlServer(Configuration.GetConnectionString("DineOnConnection")));
             services.AddTransient<IMenuItem,MenuItemService>();
@@ -60,6 +60,8 @@ namespace DineOn
                 endpoints.MapControllerRoute(
                     name: "default",
                     pattern: "{controller=Home}/{action=Index}/{id?}");
+                endpoints.MapControllers();
+                endpoints.MapRazorPages();
                 endpoints.MapBlazorHub();
             });
         }
