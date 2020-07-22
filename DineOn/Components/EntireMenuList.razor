@@ -230,10 +230,12 @@ else
 @code {
 
     MenuItem selectedMenuItem;
-    int selectedMenuItemId;
+    private int selectedMenuItemId { get; set; }
+    private int quantity { get; set; }
 
     void SelectMenuItem(int itemId)
     {
+        quantity = 1;
         selectedMenuItemId = itemId;
         selectedMenuItem = menuService.GetMenuItem(itemId);
         GetCurrentRating();
@@ -258,6 +260,28 @@ else
         SelectMenuItem(selectedMenuItemId);
     }
 
+
+    void AddToCart(MenuItem SelectedItem, int quantity)
+    {
+        Console.WriteLine(quantity);
+    }
+
+    void increaseQuantity(MouseEventArgs e)
+    {
+        quantity++;
+    }
+
+    void decreaseQuantity(MouseEventArgs e)
+    {
+        if(quantity == 1)
+        {
+            quantity = quantity;
+        }
+        else
+        {
+            quantity--;
+        }
+    }
 }
 
 
@@ -286,16 +310,16 @@ else
                                     <form action="">
                                         <div class="input-group ">
                                             <div class="input-group-prepend">
-                                                <button class="btn btn-outline-dark" type="button" id="decrease" onclick="decreaseValue()">-</button>
+                                                <button class="btn btn-outline-dark" type="button" @onclick="(e => decreaseQuantity(e))">-</button>
                                             </div>
-                                            <input type="number" class="form-control" value="0" id="quantity">
+                                            <input type="number" class="form-control" @bind="quantity" @bind:event="oninput" id="quantity" disabled>
                                             <div class="input-group-append">
-                                                <button class="btn btn-outline-dark" type="button" id="increase" onclick="increaseValue()">+</button>
+                                                <button class="btn btn-outline-dark" type="button" @onclick="(e => increaseQuantity(e))">+</button>
                                             </div>
                                         </div>
                                     </form>
                                 </div>
-                                <div class="col-md-5"><button class="btn btn-outline-dark">Add to Cart <i class="fa fa-shopping-cart" aria-hidden="true"></i></button></div>
+                                <div class="col-md-5"><button class="btn btn-outline-dark" data-dismiss="modal" @onclick="(e => AddToCart(selectedMenuItem,quantity))">Add to Cart<i class="fa fa-shopping-cart" aria-hidden="true"></i></button></div>
                             </div>
                         </div>
                     </div>
@@ -307,7 +331,7 @@ else
                     }
                     else
                     {
-                        <span>@voteCount @voteLabel</span>
+                <span>Leave a rating! @voteCount @voteLabel</span>
                     }
                     @for (int i = 1; i < 6; i++)
                     {

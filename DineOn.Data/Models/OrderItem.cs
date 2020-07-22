@@ -10,7 +10,6 @@ namespace DineOn.Data.Models
         public virtual MenuItem MenuItem { get; set; }
         public DateTime DateCreated { get; set; }
         public int Quantity { get; set; }
-        public string  OrderCartId { get; set; }
-
+        public string OrderCartId { get; set; }
     }
 }
