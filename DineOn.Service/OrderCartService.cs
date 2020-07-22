@@ -10,10 +10,10 @@ using System.Text;
 
 namespace DineOn.Service
 {
-    public class OrderCart
+    public class OrderCartService
     {
         private readonly DineOnDBContext _context;
-        private OrderCart(DineOnDBContext context)
+        private OrderCartService(DineOnDBContext context)
         {
             _context = context;
         }
@@ -21,7 +21,7 @@ namespace DineOn.Service
         public string OrderCartId { get; set; }
         public virtual IEnumerable<OrderItem> OrderItems { get; set; }
 
-        public static OrderCart GetCart(IServiceProvider services)
+        public static OrderCartService GetCart(IServiceProvider services)
         {
             ISession session = services.GetRequiredService<IHttpContextAccessor>()?
                 .HttpContext.Session;
@@ -31,7 +31,7 @@ namespace DineOn.Service
 
             session.SetString("CartId", cartId);
 
-            return new OrderCart(context) {OrderCartId = cartId };
+            return new OrderCartService(context) { OrderCartId = cartId };
         }
 
 
