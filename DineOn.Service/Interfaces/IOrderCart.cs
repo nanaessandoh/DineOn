@@ -9,11 +9,11 @@ namespace DineOn.Service.Interfaces
     public interface IOrderCart
     {
         string GetCartId();
-        public void SetCardId();
         void AddToCart(MenuItem menuItem, int quantity);
         void RemoveFromCart(MenuItem menuItem);
         IEnumerable<OrderItem> GetOrderCartItems();
         void ClearCart();
         double GetOrderCartTotal();
+        int GetCartCount();
     }
 }

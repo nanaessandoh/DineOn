@@ -6,7 +6,6 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 
 namespace DineOn.Service
 {
@@ -23,10 +22,6 @@ namespace DineOn.Service
             _session = _httpContextAccessor.HttpContext.Session;
         }
 
-        public void SetCardId()
-        {
-            _session.SetString("cartId", Guid.NewGuid().ToString());
-        }
 
         public string GetCartId()
         {
@@ -37,13 +32,8 @@ namespace DineOn.Service
 
         public void AddToCart(MenuItem menuItem, int quantity)
         {
-            // Check 
+            // Get Session value and time
             var cartId = GetCartId();
-            if (cartId == null)
-            {
-                SetCardId();
-                cartId = GetCartId();
-            }
             var currentTime = DateTime.Now;
             // Check Orders to see if item exist
             var orderCartItem = _context.OrderItems
@@ -71,7 +61,8 @@ namespace DineOn.Service
         }
 
         public void RemoveFromCart(MenuItem menuItem)
-        {
+        {  
+            // Get Session Value
             var cartId = GetCartId();
             // Check Orders to see if item exist
             var orderCartItem = _context.OrderItems
@@ -86,7 +77,9 @@ namespace DineOn.Service
 
         public IEnumerable<OrderItem> GetOrderCartItems()
         {
+            // Get Session Value
             var cartId = GetCartId();
+            // Return list of items associated with session id
             return _context.OrderItems
                 .Include(asset => asset.MenuItem)
                 .Where(asset => asset.OrderCartId == cartId);
@@ -95,16 +88,22 @@ namespace DineOn.Service
 
         public void ClearCart()
         {
+            // Get Items related to session Value
             var cartItems = GetOrderCartItems();
             _context.RemoveRange(cartItems);
             _context.SaveChanges();
+        }
+
+        public int GetCartCount()
+        {
+            return GetOrderCartItems().Count(); 
         }
 
 
         public double GetOrderCartTotal()
         {
             double total = GetOrderCartItems().Select(asset => asset.MenuItem.Price * asset.Quantity).Sum();
-            return total;
+            return Math.Round(total, 2);
         }
 
     }

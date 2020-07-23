@@ -2,11 +2,15 @@
 @using DineOn.Data.Models
 @using DineOn.Service.Interfaces
 @inject IMenuItem menuService
+@inject IOrderCart cartService
 
 
 <div class="row mb-3">
-    <div class="clearfix">
+    <div class="col-md-9 clearfix">
         <p class="display-3">Menu</p>
+    </div>
+    <div class="col-md-3 pt-md-5">
+        <a class="h4">Total Items in Cart <span class="badge badge-warning">@cartService.GetCartCount()</span></a>
     </div>
 </div>
 
@@ -61,17 +65,20 @@
 </div>
 
 
-
 @code {
 
     MenuItem selectedMenuItem;
-    int selectedMenuItemId;
+    private int selectedMenuItemId { get; set; }
+    private int quantity { get; set; }
+    private double total { get; set; }
 
     void SelectMenuItem(int itemId)
     {
+        quantity = 1;
         selectedMenuItemId = itemId;
         selectedMenuItem = menuService.GetMenuItem(itemId);
         GetCurrentRating();
+        total = Math.Round(quantity * selectedMenuItem.Price, 2);
     }
 
     int currentRating = 0;
@@ -93,6 +100,31 @@
         SelectMenuItem(selectedMenuItemId);
     }
 
+
+    void AddToCart(MenuItem SelectedItem, int quantity)
+    {
+        cartService.AddToCart(SelectedItem, quantity);
+        cartService.GetCartCount();
+    }
+
+    void increaseQuantity(MouseEventArgs e)
+    {
+        quantity++;
+        total = Math.Round(quantity * selectedMenuItem.Price, 2);
+    }
+
+    void decreaseQuantity(MouseEventArgs e)
+    {
+        if (quantity == 1)
+        {
+            quantity = quantity;
+        }
+        else
+        {
+            quantity--;
+            total = Math.Round(quantity * selectedMenuItem.Price, 2);
+        }
+    }
 }
 
 
@@ -103,7 +135,7 @@
             @if (selectedMenuItem != null)
             {
                 <div class="modal-header">
-                    <h5 class="modal-title" id="MenuItemTitle"><strong>@selectedMenuItem.Name</strong></h5>
+                    <h5 class="modal-title" id="MenuItemTitle"><strong>@selectedMenuItem.Name - C$@total</strong></h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
@@ -121,16 +153,16 @@
                                     <form action="">
                                         <div class="input-group ">
                                             <div class="input-group-prepend">
-                                                <button class="btn btn-outline-dark" type="button" id="decrease" onclick="decreaseValue()">-</button>
+                                                <button class="btn btn-outline-dark" type="button" @onclick="(e => decreaseQuantity(e))">-</button>
                                             </div>
-                                            <input type="number" class="form-control" value="0" id="quantity">
+                                            <input type="number" class="form-control" @bind="quantity" @bind:event="oninput" id="quantity" disabled>
                                             <div class="input-group-append">
-                                                <button class="btn btn-outline-dark" type="button" id="increase" onclick="increaseValue()">+</button>
+                                                <button class="btn btn-outline-dark" type="button" @onclick="(e => increaseQuantity(e))">+</button>
                                             </div>
                                         </div>
                                     </form>
                                 </div>
-                                <div class="col-md-5"><button class="btn btn-outline-dark">Add to Cart <i class="fa fa-shopping-cart" aria-hidden="true"></i></button></div>
+                                <div class="col-md-5"><button class="btn btn-outline-dark" data-dismiss="modal" @onclick="(e => AddToCart(selectedMenuItem,quantity))">Add to Cart&nbsp;&nbsp;<i class="fa fa-shopping-cart" aria-hidden="true"></i></button></div>
                             </div>
                         </div>
                     </div>
@@ -142,7 +174,7 @@
                     }
                     else
                     {
-                        <span>@voteCount @voteLabel</span>
+                        <span>Leave a rating! @voteCount @voteLabel</span>
                     }
                     @for (int i = 1; i < 6; i++)
                     {

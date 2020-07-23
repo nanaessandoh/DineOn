@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using DineOn.Web.Models;
 using Microsoft.AspNetCore.Mvc;
 using DineOn.Service.Interfaces;
+using Microsoft.AspNetCore.Http;
 
 namespace DineOn.Web.Controllers
 {
@@ -21,6 +22,10 @@ namespace DineOn.Web.Controllers
 
         public IActionResult Index()
         {
+            if (string.IsNullOrEmpty(HttpContext.Session.GetString("cartId")))
+            {
+                HttpContext.Session.SetString("cartId", Guid.NewGuid().ToString());
+            }
             ViewData["Title"] = "Full Menu";
             return View();
         }
@@ -28,12 +33,20 @@ namespace DineOn.Web.Controllers
 
         public IActionResult Burger()
         {
+            if (string.IsNullOrEmpty(HttpContext.Session.GetString("cartId")))
+            {
+                HttpContext.Session.SetString("cartId", Guid.NewGuid().ToString());
+            }
             ViewData["Title"] = "Burgers";
             return View();
         }
 
         public IActionResult Dessert()
         {
+            if (string.IsNullOrEmpty(HttpContext.Session.GetString("cartId")))
+            {
+                HttpContext.Session.SetString("cartId", Guid.NewGuid().ToString());
+            }
             ViewData["Title"] = "Dessert";
             return View();
         }
@@ -41,24 +54,40 @@ namespace DineOn.Web.Controllers
 
         public IActionResult Mexican()
         {
+            if (string.IsNullOrEmpty(HttpContext.Session.GetString("cartId")))
+            {
+                HttpContext.Session.SetString("cartId", Guid.NewGuid().ToString());
+            }
             ViewData["Title"] = "Mexican";
             return View();
         }
 
         public IActionResult Pizza()
         {
+            if (string.IsNullOrEmpty(HttpContext.Session.GetString("cartId")))
+            {
+                HttpContext.Session.SetString("cartId", Guid.NewGuid().ToString());
+            }
             ViewData["Title"] = "Pizza";
             return View();
         }
 
         public IActionResult Starter()
         {
+            if (string.IsNullOrEmpty(HttpContext.Session.GetString("cartId")))
+            {
+                HttpContext.Session.SetString("cartId", Guid.NewGuid().ToString());
+            }
             ViewData["Title"] = "Starter";
             return View();
         }
 
         public IActionResult Vegetarian()
         {
+            if (string.IsNullOrEmpty(HttpContext.Session.GetString("cartId")))
+            {
+                HttpContext.Session.SetString("cartId", Guid.NewGuid().ToString());
+            }
             ViewData["Title"] = "Vegetarian";
             return View();
         }

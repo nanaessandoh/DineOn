@@ -22,12 +22,20 @@ namespace DineOn.Web.Controllers
 
         public IActionResult Index()
         {
+            if (string.IsNullOrEmpty(HttpContext.Session.GetString("cartId")))
+            {
+                HttpContext.Session.SetString("cartId", Guid.NewGuid().ToString());
+            }
             return View();
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
         {
+            if (string.IsNullOrEmpty(HttpContext.Session.GetString("cartId")))
+            {
+                HttpContext.Session.SetString("cartId", Guid.NewGuid().ToString());
+            }
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
     }
