@@ -1,8 +1,8 @@
 ﻿using DineOn.Data;
 using DineOn.Data.Models;
+using DineOn.Service.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,37 +10,44 @@ using System.Text;
 
 namespace DineOn.Service
 {
-    public class OrderCartService
+    public class OrderCartService : IOrderCart
     {
         private readonly DineOnDBContext _context;
-        private OrderCartService(DineOnDBContext context)
+        private readonly IHttpContextAccessor _httpContextAccessor;
+        private readonly ISession _session;
+
+        public OrderCartService(DineOnDBContext context, IHttpContextAccessor httpContextAccessor)
         {
             _context = context;
+            _httpContextAccessor = httpContextAccessor;
+            _session = _httpContextAccessor.HttpContext.Session;
         }
 
-        public string OrderCartId { get; set; }
-        public virtual IEnumerable<OrderItem> OrderItems { get; set; }
-
-        public static OrderCartService GetCart(IServiceProvider services)
+        public void SetCardId()
         {
-            ISession session = services.GetRequiredService<IHttpContextAccessor>()?
-                .HttpContext.Session;
-
-            var context = services.GetService<DineOnDBContext>();
-            string cartId = session.GetString("CartId") ?? Guid.NewGuid().ToString();
-
-            session.SetString("CartId", cartId);
-
-            return new OrderCartService(context) { OrderCartId = cartId };
+            _session.SetString("cartId", Guid.NewGuid().ToString());
         }
+
+        public string GetCartId()
+        {
+            return _session.GetString("cartId");
+        }
+
 
 
         public void AddToCart(MenuItem menuItem, int quantity)
         {
+            // Check 
+            var cartId = GetCartId();
+            if (cartId == null)
+            {
+                SetCardId();
+                cartId = GetCartId();
+            }
             var currentTime = DateTime.Now;
             // Check Orders to see if item exist
             var orderCartItem = _context.OrderItems
-                .SingleOrDefault(asset => asset.MenuItem.MenuItemId == menuItem.MenuItemId && asset.OrderCartId == OrderCartId);
+                .SingleOrDefault(asset => asset.MenuItem.MenuItemId == menuItem.MenuItemId && asset.OrderCartId == cartId);
 
             // If Item does not exist add to the Table
             if (orderCartItem == null)
@@ -49,7 +56,7 @@ namespace DineOn.Service
                 {
                     MenuItem = menuItem,
                     Quantity = quantity,
-                    OrderCartId = OrderCartId,
+                    OrderCartId = cartId,
                     DateCreated = currentTime
                 };
 
@@ -65,9 +72,10 @@ namespace DineOn.Service
 
         public void RemoveFromCart(MenuItem menuItem)
         {
+            var cartId = GetCartId();
             // Check Orders to see if item exist
             var orderCartItem = _context.OrderItems
-                .SingleOrDefault(asset => asset.MenuItem.MenuItemId == menuItem.MenuItemId && asset.OrderCartId == OrderCartId);
+                .SingleOrDefault(asset => asset.MenuItem.MenuItemId == menuItem.MenuItemId && asset.OrderCartId == cartId);
 
             // If item exist in cart remove
             if (orderCartItem != null)
@@ -78,9 +86,10 @@ namespace DineOn.Service
 
         public IEnumerable<OrderItem> GetOrderCartItems()
         {
+            var cartId = GetCartId();
             return _context.OrderItems
                 .Include(asset => asset.MenuItem)
-                .Where(asset => asset.OrderCartId == OrderCartId);
+                .Where(asset => asset.OrderCartId == cartId);
         }
 
 

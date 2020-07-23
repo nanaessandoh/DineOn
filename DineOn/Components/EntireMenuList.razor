@@ -2,6 +2,7 @@
 @using DineOn.Data.Models
 @using DineOn.Service.Interfaces
 @inject IMenuItem menuService
+@inject IOrderCart cartService
 
 
 <div class="row mb-3">
@@ -9,10 +10,6 @@
         <p class="display-3">Menu</p>
     </div>
 </div>
-
-
-
-
 
 
 
@@ -226,7 +223,6 @@ else
 
 
 
-
 @code {
 
     MenuItem selectedMenuItem;
@@ -263,7 +259,7 @@ else
 
     void AddToCart(MenuItem SelectedItem, int quantity)
     {
-        Console.WriteLine(quantity);
+        cartService.AddToCart(SelectedItem, quantity);
     }
 
     void increaseQuantity(MouseEventArgs e)
@@ -273,7 +269,7 @@ else
 
     void decreaseQuantity(MouseEventArgs e)
     {
-        if(quantity == 1)
+        if (quantity == 1)
         {
             quantity = quantity;
         }
@@ -331,7 +327,7 @@ else
                     }
                     else
                     {
-                <span>Leave a rating! @voteCount @voteLabel</span>
+                        <span>Leave a rating! @voteCount @voteLabel</span>
                     }
                     @for (int i = 1; i < 6; i++)
                     {

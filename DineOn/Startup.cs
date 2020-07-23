@@ -1,14 +1,10 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using DineOn.Data;
 using DineOn.Service;
 using DineOn.Service.Interfaces;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -35,8 +31,8 @@ namespace DineOn
             services.AddDbContext<DineOnDBContext>(options
                 => options.UseSqlServer(Configuration.GetConnectionString("DineOnConnection")));
             services.AddTransient<IMenuItem,MenuItemService>();
+            services.AddTransient<IOrderCart, OrderCartService>();
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
-            services.AddScoped(asset => OrderCartService.GetCart(asset));
             services.AddDistributedMemoryCache();
             services.AddSession(options =>
             {
@@ -44,6 +40,7 @@ namespace DineOn
                 options.Cookie.HttpOnly = true;
                 options.Cookie.IsEssential = true;
             });
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

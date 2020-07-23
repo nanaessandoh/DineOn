@@ -6,6 +6,8 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using DineOn.Web.Models;
+using Microsoft.AspNetCore.Http;
+using Newtonsoft.Json;
 
 namespace DineOn.Web.Controllers
 {
@@ -29,4 +31,5 @@ namespace DineOn.Web.Controllers
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
     }
+
 }
