@@ -10,7 +10,7 @@
         <p class="display-3">Menu</p>
     </div>
     <div class="col-md-3 pt-md-5">
-        <a class="h4">Total Items in Cart <span class="badge badge-warning">@cartService.GetCartCount()</span></a>
+        <a class="h4" asp-controller="Checkout" asp-action="Index">Total Items in Cart <span class="badge badge-warning">@cartService.GetCartCount()</span></a>
     </div>
 </div>
 

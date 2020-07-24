@@ -1,0 +1,97 @@
+﻿@using Microsoft.AspNetCore.Components.Web
+@using DineOn.Data.Models
+@using DineOn.Service.Interfaces
+@inject IMenuItem menuService
+@inject IOrderCart cartService
+
+<div class="row mt-3">
+    <div class="col-md-9 clearfix">
+        <p class="display-4">Order Cart</p>
+    </div>
+</div>
+
+
+
+@if (cartService.GetOrderCartItems() != null && cartService.GetOrderCartItems().Any())
+
+{
+    <div class="row">
+        <div class="col-md-6 offset-md-3 clearfix">
+            <p class="h5 float-right">Price</p>
+        </div>
+    </div>
+    <hr />
+
+    @foreach (var asset in cartService.GetOrderCartItems())
+    {
+        <div class="card mb-3">
+            <div class="row no-gutters">
+                <div class="col-md-10">
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-10 form-row">
+                                <p class="card-text h6"><strong>@asset.MenuItem.Name</strong></p><p class="text-muted h6">&nbsp; × @asset.Quantity</p>
+                            </div>
+                            <div class="col-md float-md-right float-lg-right">
+                                <p class=" h6"><strong>C$@Math.Round(asset.Quantity * asset.MenuItem.Price, 2)</strong></p>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12 form-row">
+                                <button type="button" class="btn btn-outline-secondary btn-sm">Edit</button>&nbsp;&nbsp;
+                                <button type="button" class="btn btn-outline-danger btn-sm" @onclick="e => DeleteCartItem(asset.MenuItem.MenuItemId)">Delete</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <img src="@asset.MenuItem.ImageUrl" class="card-img" alt="...">
+                </div>
+            </div>
+        </div>
+    }
+    <hr />
+    <div class="row">
+        <div class="col-md-12 clearfix">
+            <p class="h5 float-right">Subtotal (@GetCartTotal() @GetLabel()): <strong>C$@cartService.GetOrderCartTotal()</strong></p>
+        </div>
+    </div>
+
+
+
+}
+else
+{
+
+    <div class="alert alert-info" role="alert">
+        <h4 class="alert-heading">Sorry!</h4>
+        <p>Your order cart is currently empty</p>
+        <hr>
+    </div>
+
+}
+
+
+
+@code {
+
+
+    void DeleteCartItem(int itemId)
+    {
+        cartService.RemoveFromCart(itemId);
+        cartService.GetOrderCartItems();
+        cartService.GetCartCount();
+        cartService.GetOrderCartTotal();
+    }
+
+    int GetCartTotal()
+    {
+        return cartService.GetCartCount();
+    }
+
+    string GetLabel()
+    {
+        return GetCartTotal() > 1 ? "Items" : "Item";
+    }
+
+}

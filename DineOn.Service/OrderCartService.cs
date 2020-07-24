@@ -60,18 +60,19 @@ namespace DineOn.Service
             _context.SaveChanges();
         }
 
-        public void RemoveFromCart(MenuItem menuItem)
+        public void RemoveFromCart(int menuItemId)
         {  
             // Get Session Value
             var cartId = GetCartId();
             // Check Orders to see if item exist
             var orderCartItem = _context.OrderItems
-                .SingleOrDefault(asset => asset.MenuItem.MenuItemId == menuItem.MenuItemId && asset.OrderCartId == cartId);
+                .SingleOrDefault(asset => asset.MenuItem.MenuItemId == menuItemId && asset.OrderCartId == cartId);
 
             // If item exist in cart remove
             if (orderCartItem != null)
             {
                 _context.Remove(orderCartItem);
+                _context.SaveChanges();
             }
         }
 
@@ -96,7 +97,7 @@ namespace DineOn.Service
 
         public int GetCartCount()
         {
-            return GetOrderCartItems().Count(); 
+            return GetOrderCartItems().Select(asset => asset.Quantity).Sum();
         }
 
 

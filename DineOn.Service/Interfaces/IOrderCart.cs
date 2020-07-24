@@ -10,7 +10,7 @@ namespace DineOn.Service.Interfaces
     {
         string GetCartId();
         void AddToCart(MenuItem menuItem, int quantity);
-        void RemoveFromCart(MenuItem menuItem);
+        void RemoveFromCart(int menuItemId);
         IEnumerable<OrderItem> GetOrderCartItems();
         void ClearCart();
         double GetOrderCartTotal();

@@ -11,14 +11,6 @@ namespace DineOn.Web.Controllers
 {
     public class MenuController : Controller
     {
-        private readonly IMenuItem _menuService;
-
-        // Constructor to enable us access IVehicleRentalAsset object
-        public MenuController(IMenuItem menuService)
-        {
-            _menuService = menuService;
-        }
-
 
         public IActionResult Index()
         {
