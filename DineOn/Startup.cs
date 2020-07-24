@@ -73,6 +73,7 @@ namespace DineOn
                 endpoints.MapControllers();
                 endpoints.MapRazorPages();
                 endpoints.MapBlazorHub();
+                //endpoints.MapFallbackToPage("/Menu");
             });
         }
     }

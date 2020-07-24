@@ -296,7 +296,7 @@ else
             @if (selectedMenuItem != null)
             {
                 <div class="modal-header">
-                    <h5 class="modal-title" id="MenuItemTitle"><strong>@selectedMenuItem.Name - C$@total</strong></h5>
+                    <h5 class="modal-title" id="MenuItemTitle"><strong>@selectedMenuItem.Name - $@total</strong></h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
@@ -309,8 +309,8 @@ else
                             <h6>Description</h6>
                             <p class="card-text text-muted">@selectedMenuItem.Description</p>
                             <div class="row">
-                                <div class="col-md-3 mt-2"><p class="h5">C$@selectedMenuItem.Price</p></div>
-                                <div class="col-md-4">
+                                <div class="col-md-3 col-sm-6 mt-2"><p class="h5">$@selectedMenuItem.Price</p></div>
+                                <div class="col-md-4 col-sm-6">
                                     <form action="">
                                         <div class="input-group ">
                                             <div class="input-group-prepend">
@@ -323,7 +323,7 @@ else
                                         </div>
                                     </form>
                                 </div>
-                                <div class="col-md-5"><button class="btn btn-outline-dark" data-dismiss="modal" @onclick="(e => AddToCart(selectedMenuItem,quantity))">Add to Cart&nbsp;&nbsp;<i class="fa fa-shopping-cart" aria-hidden="true"></i></button></div>
+                                <div class="col-md-5"><button class="btn btn-outline-dark" data-dismiss="modal" @onclick="(e => AddToCart(selectedMenuItem,quantity))">Add to Cart <i class="fa fa-shopping-cart" aria-hidden="true"></i></button></div>
                             </div>
                         </div>
                     </div>

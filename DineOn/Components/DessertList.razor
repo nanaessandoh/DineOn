@@ -136,7 +136,7 @@
             @if (selectedMenuItem != null)
             {
                 <div class="modal-header">
-                    <h5 class="modal-title" id="MenuItemTitle"><strong>@selectedMenuItem.Name - C$@total</strong></h5>
+                    <h5 class="modal-title" id="MenuItemTitle"><strong>@selectedMenuItem.Name - $@total</strong></h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
@@ -149,7 +149,7 @@
                             <h6>Description</h6>
                             <p class="card-text text-muted">@selectedMenuItem.Description</p>
                             <div class="row">
-                                <div class="col-md-3 mt-2"><p class="h5">C$@selectedMenuItem.Price</p></div>
+                                <div class="col-md-3 mt-2"><p class="h5">$@selectedMenuItem.Price</p></div>
                                 <div class="col-md-4">
                                     <form action="">
                                         <div class="input-group ">
