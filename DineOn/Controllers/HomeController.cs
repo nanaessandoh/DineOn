@@ -26,6 +26,7 @@ namespace DineOn.Web.Controllers
             {
                 HttpContext.Session.SetString("cartId", Guid.NewGuid().ToString());
             }
+            ViewData["Title"] = "Homepage";
             return View();
         }
 

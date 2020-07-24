@@ -1,14 +1,19 @@
 ﻿@using Microsoft.AspNetCore.Components.Web
 @using DineOn.Data.Models
 @using DineOn.Service.Interfaces
+@inject NavigationManager NavigationManager
 @inject IMenuItem menuService
 @inject IOrderCart cartService
 
-<div class="row mt-3">
+<div class="row mb-3">
     <div class="col-md-9 clearfix">
-        <p class="display-4">Order Cart</p>
+        <p class="display-3">Order Cart</p>
+    </div>
+    <div class="col-md-3 pt-md-5">
+        <a class="h4" @onclick="NavigateToMenu" role="button"><i class="fa fa-arrow-left" aria-hidden="true"></i>&nbsp;&nbsp; Return to Menu</a>
     </div>
 </div>
+<hr />
 
 
 
@@ -20,7 +25,7 @@
             <p class="h5 float-right">Price</p>
         </div>
     </div>
-    <hr />
+
 
     @foreach (var asset in cartService.GetOrderCartItems())
     {
@@ -56,21 +61,20 @@
 
     <div class="row py-5 p-4 bg-white rounded shadow-sm">
         <div class="col-lg-6">
-            <div class="bg-light rounded-pill px-4 py-3 text-uppercase font-weight-bold">Instruction for Restaurant</div>
+            <div class="bg-light rounded-pill px-4 py-4 text-uppercase font-weight-bold">Instruction for Restaurant</div>
             <div class="p-4">
-                <p class="font-italic mb-4">If you have some information for the restaurant you can leave them in the box below</p>
+                <p class="font-italic mb-2">If you have some information for the restaurant you can leave them in the box below</p>
                 <textarea @bind="restaurantInstruction" @bind:event="oninput" cols="30" rows="2" class="form-control"></textarea>
             </div>
-            <div class="bg-light rounded-pill px-4 py-3 text-uppercase font-weight-bold">Instructions for Driver</div>
+            <div class="bg-light rounded-pill px-4 text-uppercase font-weight-bold">Instructions for Driver</div>
             <div class="p-4">
-                <p class="font-italic mb-4">If you have some information for the delivery driver you can leave them in the box below</p>
-                <textarea  @bind="driverInstruction" @bind:event="oninput" cols="30" rows="2" class="form-control"></textarea>
+                <p class="font-italic mb-2">If you have some information for the delivery driver you can leave them in the box below</p>
+                <textarea @bind="driverInstruction" @bind:event="oninput" cols="30" rows="2" class="form-control"></textarea>
             </div>
         </div>
         <div class="col-lg-6">
             <div class="bg-light rounded-pill px-4 py-3 text-uppercase font-weight-bold">Order summary </div>
             <div class="p-4">
-                <p class="font-italic mb-4">Shipping and additional costs are calculated based on values you have entered.</p>
                 <ul class="list-unstyled mb-4">
                     <li class="d-flex justify-content-between py-3 border-bottom"><strong class="text-muted">Order Subtotal (@cartService.GetCartCount() @GetLabel())</strong><strong>$@cartService.GetOrderCartTotal()</strong></li>
                     <li class="d-flex justify-content-between py-3 border-bottom"><strong class="text-muted">Delivery Fee</strong><strong>$3.49</strong></li>
@@ -79,7 +83,7 @@
                         <strong class="text-muted">Total (CAD)</strong>
                         <h4 class="font-weight-bold">$@CalculateTotal()</h4>
                     </li>
-                </ul><a href="#" class="btn btn-dark py-2 btn-block">Procceed to checkout</a>
+                </ul><a href="#" class="btn btn-dark py-2 btn-block">Proceed to checkout</a>
             </div>
         </div>
     </div>
@@ -90,46 +94,50 @@
 else
 {
 
-        <div class="alert alert-info" role="alert">
-            <h4 class="alert-heading">Sorry!</h4><hr>
-            <p>Your order cart is currently empty</p>
-        </div>
+    <div class="alert alert-info" role="alert">
+        <h4 class="alert-heading">Sorry!</h4><hr>
+        <p>Your order cart is currently empty</p>
+    </div>
 
 }
 
 
 
-        @code {
+@code {
 
-            public string restaurantInstruction { get; set; }
-            public string driverInstruction { get; set; }
+    public string restaurantInstruction { get; set; }
+    public string driverInstruction { get; set; }
 
-            void DeleteCartItem(int itemId)
-            {
-                cartService.RemoveFromCart(itemId);
-                cartService.GetOrderCartItems();
-                cartService.GetCartCount();
-                cartService.GetOrderCartTotal();
-                CalculateHST();
-                CalculateTotal();
+    private void DeleteCartItem(int itemId)
+    {
+        cartService.RemoveFromCart(itemId);
+        cartService.GetOrderCartItems();
+        cartService.GetCartCount();
+        cartService.GetOrderCartTotal();
+        CalculateHST();
+        CalculateTotal();
 
-            }
-
-
-            string GetLabel()
-            {
-                return cartService.GetCartCount() > 1 ? "Items" : "Item";
-            }
+    }
 
 
-            double CalculateHST()
-            {
-                return Math.Round(0.15 * cartService.GetOrderCartTotal(), 2);
-            }
+    private string GetLabel()
+    {
+        return cartService.GetCartCount() > 1 ? "Items" : "Item";
+    }
 
-            double CalculateTotal()
-            {
-                return Math.Round(cartService.GetOrderCartTotal() + CalculateHST() + 3.49 , 2);
-            }
 
-        }
+    private double CalculateHST()
+    {
+        return Math.Round(0.15 * cartService.GetOrderCartTotal(), 2);
+    }
+
+    private double CalculateTotal()
+    {
+        return Math.Round(cartService.GetOrderCartTotal() + CalculateHST() + 3.49, 2);
+    }
+
+    private void NavigateToMenu()
+    {
+        NavigationManager.NavigateTo("Menu", true);
+    }
+}

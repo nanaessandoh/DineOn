@@ -1,6 +1,7 @@
 ﻿@using Microsoft.AspNetCore.Components.Web
 @using DineOn.Data.Models
 @using DineOn.Service.Interfaces
+@inject NavigationManager NavigationManager
 @inject IMenuItem menuService
 @inject IOrderCart cartService
 
@@ -10,7 +11,7 @@
         <p class="display-3">Menu</p>
     </div>
     <div class="col-md-3 pt-md-5">
-        <a class="h4">Total Items in Cart <span class="badge badge-warning">@cartService.GetCartCount()</span></a>
+        <a class="h4" @onclick="NavigateToCheckout" role="button">Total Items in Cart <span class="badge badge-warning">@cartService.GetCartCount()</span></a>
     </div>
 </div>
 
@@ -73,7 +74,7 @@
     private int quantity { get; set; }
     private double total { get; set; }
 
-    void SelectMenuItem(int itemId)
+    private void SelectMenuItem(int itemId)
     {
         quantity = 1;
         selectedMenuItemId = itemId;
@@ -86,7 +87,7 @@
     int voteCount = 0;
     string voteLabel;
 
-    void GetCurrentRating()
+    private void GetCurrentRating()
     {
 
         voteCount = menuService.GetNumberOfRatings(selectedMenuItemId);
@@ -95,26 +96,26 @@
 
     }
 
-    void SubmitRating(int rating)
+    private void SubmitRating(int rating)
     {
         menuService.AddRating(selectedMenuItemId, rating);
         SelectMenuItem(selectedMenuItemId);
     }
 
 
-    void AddToCart(MenuItem SelectedItem, int quantity)
+    private void AddToCart(MenuItem SelectedItem, int quantity)
     {
         cartService.AddToCart(SelectedItem, quantity);
         cartService.GetCartCount();
     }
 
-    void increaseQuantity(MouseEventArgs e)
+    private void increaseQuantity(MouseEventArgs e)
     {
         quantity++;
         total = Math.Round(quantity * selectedMenuItem.Price, 2);
     }
 
-    void decreaseQuantity(MouseEventArgs e)
+    private void decreaseQuantity(MouseEventArgs e)
     {
         if (quantity == 1)
         {
@@ -126,8 +127,12 @@
             total = Math.Round(quantity * selectedMenuItem.Price, 2);
         }
     }
-}
 
+    private void NavigateToCheckout()
+    {
+        NavigationManager.NavigateTo("Checkout", true);
+    }
+}
 
 <div class="modal fade" id="menuItemModal" tabindex="-1" role="dialog" aria-labelledby="menuItemTitle" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
