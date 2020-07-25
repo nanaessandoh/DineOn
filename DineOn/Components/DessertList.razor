@@ -156,7 +156,6 @@
                             <div class="row">
                                 <div class="col-md-3 mt-2"><p class="h5">$@selectedMenuItem.Price</p></div>
                                 <div class="col-md-4">
-                                    <form action="">
                                         <div class="input-group ">
                                             <div class="input-group-prepend">
                                                 <button class="btn btn-outline-dark" type="button" @onclick="(e => decreaseQuantity(e))">-</button>
@@ -166,7 +165,6 @@
                                                 <button class="btn btn-outline-dark" type="button" @onclick="(e => increaseQuantity(e))">+</button>
                                             </div>
                                         </div>
-                                    </form>
                                 </div>
                                 <div class="col-md-5"><button class="btn btn-outline-dark" data-dismiss="modal" @onclick="(e => AddToCart(selectedMenuItem,quantity))">Add to Cart&nbsp;&nbsp;<i class="fa fa-shopping-cart" aria-hidden="true"></i></button></div>
                             </div>
@@ -176,7 +174,7 @@
                 <div class="modal-footer">
                     @if (voteCount == 0)
                     {
-                        <span>Enjoyed this meal before? Leave a rating!</span>
+                        <span>Enjoyed this meal? Leave a rating!</span>
                     }
                     else
                     {

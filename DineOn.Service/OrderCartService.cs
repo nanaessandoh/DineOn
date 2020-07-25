@@ -55,6 +55,7 @@ namespace DineOn.Service
             // If Item exist add new Quantity to existing entry 
             else
             {
+                _context.Update(orderCartItem);
                 orderCartItem.Quantity += quantity;
             }
             _context.SaveChanges();
@@ -107,5 +108,27 @@ namespace DineOn.Service
             return Math.Round(total, 2);
         }
 
+        public void ChangeCartItemQuantity(int menuItemId, int quantity)
+        {
+            // Select Cart Item
+            var cartItem = GetCartItem(menuItemId); 
+            // If the Item Exist and the quantity is not that same as the new quantity ppdate 
+            if(cartItem != null && cartItem.Quantity != quantity)
+            {
+                _context.Update(cartItem);
+                cartItem.Quantity = quantity;
+                _context.SaveChanges();
+            }
+        }
+
+        public OrderItem GetCartItem(int menuItemId)
+        {
+            // Get the Cart Id
+            var cartId = GetCartId();
+            // Select Cart Item
+            return _context.OrderItems
+                .Include(asset => asset.MenuItem)
+                .SingleOrDefault(asset => asset.MenuItem.MenuItemId == menuItemId && asset.OrderCartId == cartId);
+        }
     }
 }

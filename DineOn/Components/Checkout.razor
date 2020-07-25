@@ -43,7 +43,7 @@
                         </div>
                         <div class="row">
                             <div class="col-md-12 form-row">
-                                <button type="button" class="btn btn-outline-dark btn-sm">Quantity <i class="fa fa-pencil-square-o" aria-hidden="true"></i></button>&nbsp;&nbsp;
+                                <button type="button" class="btn btn-outline-dark btn-sm" @onclick="e => SelectedCartItem(asset.MenuItem.MenuItemId)" data-toggle="modal" data-target="#quantityModal">Quantity <i class="fa fa-pencil-square-o" aria-hidden="true"></i></button>&nbsp;&nbsp;
                                 <button type="button" class="btn btn-outline-danger btn-sm" @onclick="e => DeleteCartItem(asset.MenuItem.MenuItemId)">Delete <i class="fa fa-trash" aria-hidden="true"></i></button>
                             </div>
                         </div>
@@ -103,10 +103,26 @@ else
 
 
 
+
 @code {
 
+
+    OrderItem selectedOrderItem;
+    private int selectedOrderItemId { get; set; }
+    public int quantity { get; set; }
+    private double total { get; set; }
     public string restaurantInstruction { get; set; }
     public string driverInstruction { get; set; }
+
+
+    private void SelectedCartItem(int itemId)
+    {
+        selectedOrderItemId = itemId;
+        selectedOrderItem = cartService.GetCartItem(itemId);
+        quantity = selectedOrderItem.Quantity;
+        total = Math.Round(quantity * selectedOrderItem.MenuItem.Price, 2);
+    }
+
 
     private void DeleteCartItem(int itemId)
     {
@@ -140,4 +156,75 @@ else
     {
         NavigationManager.NavigateTo("Menu", true);
     }
+
+    private void increaseQuantity(MouseEventArgs e)
+    {
+        quantity++;
+        total = Math.Round(quantity * selectedOrderItem.MenuItem.Price, 2);
+    }
+
+    private void decreaseQuantity(MouseEventArgs e)
+    {
+        if (quantity == 1)
+        {
+            quantity = quantity;
+        }
+        else
+        {
+            quantity--;
+            total = Math.Round(quantity * selectedOrderItem.MenuItem.Price, 2);
+        }
+    }
+
+    private void ChangeCartItemQuantity(int cartItemId, int newQuantity)
+    {
+        cartService.ChangeCartItemQuantity(cartItemId, newQuantity);
+        cartService.GetOrderCartItems();
+        cartService.GetCartCount();
+        cartService.GetOrderCartTotal();
+        CalculateHST();
+        CalculateTotal();
+    }
 }
+
+
+
+
+
+<div class="modal fade" id="quantityModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            @if (selectedOrderItem != null)
+            {
+
+                <div class="modal-header">
+                    <h5 class="modal-title" id="quantityModalLabel">@selectedOrderItem.MenuItem.Name - $@total</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="col-md-4">
+                        <p>Select quantity</p>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="input-group ">
+                            <div class="input-group-prepend">
+                                <button class="btn btn-outline-dark" type="button" @onclick="(e => decreaseQuantity(e))">-</button>
+                            </div>
+                            <input type="number" class="form-control" @bind="quantity" @bind:event="oninput" id="quantity" disabled>
+                            <div class="input-group-append">
+                                <button class="btn btn-outline-dark" type="button" @onclick="(e => increaseQuantity(e))">+</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline-dark" data-dismiss="modal" @onclick="(e => ChangeCartItemQuantity(selectedOrderItem.MenuItem.MenuItemId,quantity))">Save Changes</button>
+                    <button type="button" class="btn btn-outline-danger" data-dismiss="modal">Cancel</button>
+                </div>
+
+            }
+        </div>
+    </div>
+</div>
