@@ -15,6 +15,26 @@ namespace DineOn.Web.Controllers
             {
                 HttpContext.Session.SetString("cartId", Guid.NewGuid().ToString());
             }
+            ViewData["Title"] = "OrderCart";
+            return View();
+        }
+
+        public IActionResult Checkout()
+        {
+            if (string.IsNullOrEmpty(HttpContext.Session.GetString("cartId")))
+            {
+                HttpContext.Session.SetString("cartId", Guid.NewGuid().ToString());
+            }
+            ViewData["Title"] = "Checkout";
+            return View();
+        }
+
+        public IActionResult Success()
+        {
+            if (string.IsNullOrEmpty(HttpContext.Session.GetString("cartId")))
+            {
+                HttpContext.Session.SetString("cartId", Guid.NewGuid().ToString());
+            }
             ViewData["Title"] = "Checkout";
             return View();
         }

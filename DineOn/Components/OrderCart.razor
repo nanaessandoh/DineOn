@@ -1,0 +1,230 @@
+﻿@using Microsoft.AspNetCore.Components.Web
+@using DineOn.Data.Models
+@using DineOn.Service.Interfaces
+@inject NavigationManager NavigationManager
+@inject IMenuItem menuService
+@inject IOrderCart cartService
+
+<div class="row mb-3">
+    <div class="col-md-9 clearfix">
+        <p class="display-3">Order Cart</p>
+    </div>
+    <div class="col-md-3 pt-md-5">
+        <a class="h4" @onclick="NavigateToMenu" role="button"><i class="fa fa-arrow-left" aria-hidden="true"></i>&nbsp;&nbsp; Return to Menu</a>
+    </div>
+</div>
+<hr />
+
+
+
+@if (cartService.GetOrderCartItems() != null && cartService.GetOrderCartItems().Any())
+
+{
+    <div class="row">
+        <div class="col-md-6 offset-md-3 clearfix">
+            <p class="h5 float-right">Price</p>
+        </div>
+    </div>
+
+
+    @foreach (var asset in cartService.GetOrderCartItems())
+    {
+        <div class="card mb-3">
+            <div class="row no-gutters">
+                <div class="col-md-10">
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-10 form-row">
+                                <p class="card-text h6"><strong>@asset.MenuItem.Name</strong></p><p class="text-muted h6">&nbsp; × @asset.Quantity</p>
+                            </div>
+                            <div class="col-md float-md-right float-lg-right">
+                                <p class=" h6"><strong>$@Math.Round(asset.Quantity * asset.MenuItem.Price, 2)</strong></p>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12 form-row">
+                                <button type="button" class="btn btn-outline-dark btn-sm" @onclick="e => SelectedCartItem(asset.MenuItem.MenuItemId)" data-toggle="modal" data-target="#quantityModal">Quantity <i class="fa fa-pencil-square-o" aria-hidden="true"></i></button>&nbsp;&nbsp;
+                                <button type="button" class="btn btn-outline-danger btn-sm" @onclick="e => DeleteCartItem(asset.MenuItem.MenuItemId)">Delete <i class="fa fa-trash" aria-hidden="true"></i></button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <img src="@asset.MenuItem.ImageUrl" class="card-img" alt="...">
+                </div>
+            </div>
+        </div>
+    }
+    <hr />
+
+
+
+    <div class="row py-5 p-4 bg-white rounded shadow-sm">
+        <div class="col-lg-6">
+            <div class="bg-light rounded-pill px-4 py-4 text-uppercase font-weight-bold">Instruction for Restaurant</div>
+            <div class="p-4">
+                <p class="font-italic mb-2">If you have some information for the restaurant you can leave them in the box below</p>
+                <textarea @bind="restaurantInstruction" @bind:event="oninput" cols="30" rows="2" class="form-control"></textarea>
+            </div>
+            <div class="bg-light rounded-pill px-4 text-uppercase font-weight-bold">Instructions for Driver</div>
+            <div class="p-4">
+                <p class="font-italic mb-2">If you have some information for the delivery driver you can leave them in the box below</p>
+                <textarea @bind="driverInstruction" @bind:event="oninput" cols="30" rows="2" class="form-control"></textarea>
+            </div>
+        </div>
+        <div class="col-lg-6">
+            <div class="bg-light rounded-pill px-4 py-3 text-uppercase font-weight-bold">Order summary </div>
+            <div class="p-4">
+                <ul class="list-unstyled mb-4">
+                    <li class="d-flex justify-content-between py-3 border-bottom"><strong class="text-muted">Order Subtotal (@cartService.GetCartCount() @GetLabel())</strong><strong>$@cartService.GetOrderCartTotal()</strong></li>
+                    <li class="d-flex justify-content-between py-3 border-bottom"><strong class="text-muted">Delivery Fee</strong><strong>$3.49</strong></li>
+                    <li class="d-flex justify-content-between py-3 border-bottom"><strong class="text-muted">HST</strong><strong>$@CalculateHST()</strong></li>
+                    <li class="d-flex justify-content-between py-3 border-bottom">
+                        <strong class="text-muted">Total (CAD)</strong>
+                        <h4 class="font-weight-bold">$@CalculateTotal()</h4>
+                    </li>
+                </ul><a href="#" class="btn btn-dark py-2 btn-block">Proceed to checkout</a>
+            </div>
+        </div>
+    </div>
+
+
+
+}
+else
+{
+
+    <div class="alert alert-info" role="alert">
+        <h4 class="alert-heading">Sorry!</h4><hr>
+        <p>Your order cart is currently empty</p>
+    </div>
+
+}
+
+
+
+
+@code {
+
+
+    OrderItem selectedOrderItem;
+    private int selectedOrderItemId { get; set; }
+    public int quantity { get; set; }
+    private double total { get; set; }
+    public string restaurantInstruction { get; set; }
+    public string driverInstruction { get; set; }
+
+
+    private void SelectedCartItem(int itemId)
+    {
+        selectedOrderItemId = itemId;
+        selectedOrderItem = cartService.GetCartItem(itemId);
+        quantity = selectedOrderItem.Quantity;
+        total = Math.Round(quantity * selectedOrderItem.MenuItem.Price, 2);
+    }
+
+
+    private void DeleteCartItem(int itemId)
+    {
+        cartService.RemoveFromCart(itemId);
+        cartService.GetOrderCartItems();
+        cartService.GetCartCount();
+        cartService.GetOrderCartTotal();
+        CalculateHST();
+        CalculateTotal();
+
+    }
+
+
+    private string GetLabel()
+    {
+        return cartService.GetCartCount() > 1 ? "Items" : "Item";
+    }
+
+
+    private double CalculateHST()
+    {
+        return Math.Round(0.15 * cartService.GetOrderCartTotal(), 2);
+    }
+
+    private double CalculateTotal()
+    {
+        return Math.Round(cartService.GetOrderCartTotal() + CalculateHST() + 3.49, 2);
+    }
+
+    private void NavigateToMenu()
+    {
+        NavigationManager.NavigateTo("Menu", true);
+    }
+
+    private void increaseQuantity(MouseEventArgs e)
+    {
+        quantity++;
+        total = Math.Round(quantity * selectedOrderItem.MenuItem.Price, 2);
+    }
+
+    private void decreaseQuantity(MouseEventArgs e)
+    {
+        if (quantity == 1)
+        {
+            quantity = quantity;
+        }
+        else
+        {
+            quantity--;
+            total = Math.Round(quantity * selectedOrderItem.MenuItem.Price, 2);
+        }
+    }
+
+    private void ChangeCartItemQuantity(int cartItemId, int newQuantity)
+    {
+        cartService.ChangeCartItemQuantity(cartItemId, newQuantity);
+        cartService.GetOrderCartItems();
+        cartService.GetCartCount();
+        cartService.GetOrderCartTotal();
+        CalculateHST();
+        CalculateTotal();
+    }
+}
+
+
+
+
+
+<div class="modal fade" id="quantityModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            @if (selectedOrderItem != null)
+            {
+
+                <div class="modal-header">
+                    <h5 class="modal-title" id="quantityModalLabel">@selectedOrderItem.MenuItem.Name - $@total</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="col-md-4">
+                        <p>Select quantity</p>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="input-group ">
+                            <div class="input-group-prepend">
+                                <button class="btn btn-outline-dark" type="button" @onclick="(e => decreaseQuantity(e))">-</button>
+                            </div>
+                            <input type="number" class="form-control" @bind="quantity" @bind:event="oninput" id="quantity" disabled>
+                            <div class="input-group-append">
+                                <button class="btn btn-outline-dark" type="button" @onclick="(e => increaseQuantity(e))">+</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline-dark" data-dismiss="modal" @onclick="(e => ChangeCartItemQuantity(selectedOrderItem.MenuItem.MenuItemId,quantity))">Save Changes</button>
+                    <button type="button" class="btn btn-outline-danger" data-dismiss="modal">Cancel</button>
+                </div>
+
+            }
+        </div>
+    </div>
+</div>
