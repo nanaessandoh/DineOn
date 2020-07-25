@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DineOn.Data.Migrations
 {
     [DbContext(typeof(DineOnDBContext))]
-    [Migration("20200719030616_Initial Model Migration 3")]
-    partial class InitialModelMigration3
+    [Migration("20200725230830_Update 3")]
+    partial class Update3
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -20,6 +20,29 @@ namespace DineOn.Data.Migrations
                 .HasAnnotation("ProductVersion", "3.1.6")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+            modelBuilder.Entity("DineOn.Data.Models.CartItem", b =>
+                {
+                    b.Property<int>("CartItemId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("CartId")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("MenuItemId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Quantity")
+                        .HasColumnType("int");
+
+                    b.HasKey("CartItemId");
+
+                    b.HasIndex("MenuItemId");
+
+                    b.ToTable("CartItems");
+                });
 
             modelBuilder.Entity("DineOn.Data.Models.Category", b =>
                 {
@@ -61,29 +84,11 @@ namespace DineOn.Data.Migrations
                     b.Property<double>("Price")
                         .HasColumnType("float");
 
-                    b.Property<int>("Quantity")
-                        .HasColumnType("int");
-
                     b.HasKey("MenuItemId");
 
                     b.HasIndex("CategoryId");
 
                     b.ToTable("MenuItems");
-                });
-
-            modelBuilder.Entity("DineOn.Data.Models.MenuItemOrder", b =>
-                {
-                    b.Property<int>("MenuItemId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("OrderId")
-                        .HasColumnType("int");
-
-                    b.HasKey("MenuItemId", "OrderId");
-
-                    b.HasIndex("OrderId");
-
-                    b.ToTable("MenuItemOrders");
                 });
 
             modelBuilder.Entity("DineOn.Data.Models.Order", b =>
@@ -93,9 +98,67 @@ namespace DineOn.Data.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+                    b.Property<string>("AddressLine1")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("AddressLine2")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("City")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("DateCreated")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Email")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("FirstName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("LastName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("OrderReference")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("PostalCode")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<double>("Total")
+                        .HasColumnType("float");
+
                     b.HasKey("OrderId");
 
                     b.ToTable("Orders");
+                });
+
+            modelBuilder.Entity("DineOn.Data.Models.OrderItem", b =>
+                {
+                    b.Property<int>("OrderItemId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int?>("MenuItemId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("OrderId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("OrderReference")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("Quantity")
+                        .HasColumnType("int");
+
+                    b.HasKey("OrderItemId");
+
+                    b.HasIndex("MenuItemId");
+
+                    b.HasIndex("OrderId");
+
+                    b.ToTable("OrderItems");
                 });
 
             modelBuilder.Entity("DineOn.Data.Models.Rating", b =>
@@ -115,7 +178,14 @@ namespace DineOn.Data.Migrations
 
                     b.HasIndex("MenuItemId");
 
-                    b.ToTable("Rating");
+                    b.ToTable("Ratings");
+                });
+
+            modelBuilder.Entity("DineOn.Data.Models.CartItem", b =>
+                {
+                    b.HasOne("DineOn.Data.Models.MenuItem", "MenuItem")
+                        .WithMany()
+                        .HasForeignKey("MenuItemId");
                 });
 
             modelBuilder.Entity("DineOn.Data.Models.MenuItem", b =>
@@ -125,19 +195,15 @@ namespace DineOn.Data.Migrations
                         .HasForeignKey("CategoryId");
                 });
 
-            modelBuilder.Entity("DineOn.Data.Models.MenuItemOrder", b =>
+            modelBuilder.Entity("DineOn.Data.Models.OrderItem", b =>
                 {
                     b.HasOne("DineOn.Data.Models.MenuItem", "MenuItem")
-                        .WithMany("MenuItemOrders")
-                        .HasForeignKey("MenuItemId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .WithMany()
+                        .HasForeignKey("MenuItemId");
 
                     b.HasOne("DineOn.Data.Models.Order", "Order")
-                        .WithMany("MenuItemOrders")
-                        .HasForeignKey("OrderId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .WithMany("OrderDetails")
+                        .HasForeignKey("OrderId");
                 });
 
             modelBuilder.Entity("DineOn.Data.Models.Rating", b =>

@@ -9,13 +9,13 @@ using System.Linq;
 
 namespace DineOn.Service
 {
-    public class OrderCartService : IOrderCart
+    public class CartService : ICart
     {
         private readonly DineOnDBContext _context;
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly ISession _session;
 
-        public OrderCartService(DineOnDBContext context, IHttpContextAccessor httpContextAccessor)
+        public CartService(DineOnDBContext context, IHttpContextAccessor httpContextAccessor)
         {
             _context = context;
             _httpContextAccessor = httpContextAccessor;
@@ -34,20 +34,18 @@ namespace DineOn.Service
         {
             // Get Session value and time
             var cartId = GetCartId();
-            var currentTime = DateTime.Now;
             // Check Orders to see if item exist
-            var orderCartItem = _context.OrderItems
-                .SingleOrDefault(asset => asset.MenuItem.MenuItemId == menuItem.MenuItemId && asset.OrderCartId == cartId);
+            var orderCartItem = _context.CartItems
+                .SingleOrDefault(asset => asset.MenuItem.MenuItemId == menuItem.MenuItemId && asset.CartId == cartId);
 
             // If Item does not exist add to the Table
             if (orderCartItem == null)
             {
-                orderCartItem = new OrderItem
+                orderCartItem = new CartItem
                 {
                     MenuItem = menuItem,
                     Quantity = quantity,
-                    OrderCartId = cartId,
-                    DateCreated = currentTime
+                    CartId = cartId
                 };
 
                 _context.Add(orderCartItem);
@@ -66,8 +64,8 @@ namespace DineOn.Service
             // Get Session Value
             var cartId = GetCartId();
             // Check Orders to see if item exist
-            var orderCartItem = _context.OrderItems
-                .SingleOrDefault(asset => asset.MenuItem.MenuItemId == menuItemId && asset.OrderCartId == cartId);
+            var orderCartItem = _context.CartItems
+                .SingleOrDefault(asset => asset.MenuItem.MenuItemId == menuItemId && asset.CartId == cartId);
 
             // If item exist in cart remove
             if (orderCartItem != null)
@@ -77,34 +75,34 @@ namespace DineOn.Service
             }
         }
 
-        public IEnumerable<OrderItem> GetOrderCartItems()
+        public IEnumerable<CartItem> GetCartItems()
         {
             // Get Session Value
             var cartId = GetCartId();
             // Return list of items associated with session id
-            return _context.OrderItems
+            return _context.CartItems
                 .Include(asset => asset.MenuItem)
-                .Where(asset => asset.OrderCartId == cartId);
+                .Where(asset => asset.CartId == cartId);
         }
 
 
         public void ClearCart()
         {
             // Get Items related to session Value
-            var cartItems = GetOrderCartItems();
+            var cartItems = GetCartItems();
             _context.RemoveRange(cartItems);
             _context.SaveChanges();
         }
 
         public int GetCartCount()
         {
-            return GetOrderCartItems().Select(asset => asset.Quantity).Sum();
+            return GetCartItems().Select(asset => asset.Quantity).Sum();
         }
 
 
-        public double GetOrderCartTotal()
+        public double GetCartTotal()
         {
-            double total = GetOrderCartItems().Select(asset => asset.MenuItem.Price * asset.Quantity).Sum();
+            double total = GetCartItems().Select(asset => asset.MenuItem.Price * asset.Quantity).Sum();
             return Math.Round(total, 2);
         }
 
@@ -121,14 +119,14 @@ namespace DineOn.Service
             }
         }
 
-        public OrderItem GetCartItem(int menuItemId)
+        public CartItem GetCartItem(int menuItemId)
         {
             // Get the Cart Id
             var cartId = GetCartId();
             // Select Cart Item
-            return _context.OrderItems
+            return _context.CartItems
                 .Include(asset => asset.MenuItem)
-                .SingleOrDefault(asset => asset.MenuItem.MenuItemId == menuItemId && asset.OrderCartId == cartId);
+                .SingleOrDefault(asset => asset.MenuItem.MenuItemId == menuItemId && asset.CartId == cartId);
         }
     }
 }

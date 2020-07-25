@@ -3,7 +3,7 @@
 @using DineOn.Service.Interfaces
 @inject NavigationManager NavigationManager
 @inject IMenuItem menuService
-@inject IOrderCart cartService
+@inject ICart cartService
 
 <div class="row mb-3">
     <div class="col-md-12 clearfix">
@@ -97,7 +97,7 @@
 
             <div class="row">
                 <div class="col-md-5 mb-3">
-                    <label for="country">Country</label>
+                    <label for="country">City</label>
                     <select class="custom-select d-block w-100" id="city" required>
                         <option value="">Choose...</option>
                         <option>St. John's</option>
@@ -110,8 +110,8 @@
                     </div>
                 </div>
                 <div class="col-md-3 mb-3">
-                    <label for="zip">Zip</label>
-                    <input type="text" class="form-control" id="zip" placeholder="ABC-123" required>
+                    <label for="zip">Postal Code</label>
+                    <input type="text" class="form-control" id="zip" placeholder="" required>
                     <div class="invalid-feedback">
                         Zip code required.
                     </div>

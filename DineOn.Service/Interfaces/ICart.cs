@@ -6,16 +6,16 @@ using System.Text;
 
 namespace DineOn.Service.Interfaces
 {
-    public interface IOrderCart
+    public interface ICart
     {
         string GetCartId();
         void AddToCart(MenuItem menuItem, int quantity);
-        OrderItem GetCartItem(int menuItemId);
+        CartItem GetCartItem(int menuItemId);
         void ChangeCartItemQuantity(int menuItemId, int quantity);
         void RemoveFromCart(int menuItemId);
-        IEnumerable<OrderItem> GetOrderCartItems();
+        IEnumerable<CartItem> GetCartItems();
         void ClearCart();
-        double GetOrderCartTotal();
+        double GetCartTotal();
         int GetCartCount();
     }
 }

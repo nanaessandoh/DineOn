@@ -31,7 +31,8 @@ namespace DineOn
             services.AddDbContext<DineOnDBContext>(options
                 => options.UseSqlServer(Configuration.GetConnectionString("DineOnConnection")));
             services.AddTransient<IMenuItem,MenuItemService>();
-            services.AddTransient<IOrderCart, OrderCartService>();
+            services.AddTransient<ICart, CartService>();
+            services.AddTransient<ICheckout, CheckoutService>();
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             services.AddDistributedMemoryCache();
             services.AddSession(options =>
