@@ -4,6 +4,7 @@
 @inject NavigationManager NavigationManager
 @inject IMenuItem menuService
 @inject ICart cartService
+@inject ICheckout checkoutService
 
 <div class="row mb-3">
     <div class="col-md-9 clearfix">
@@ -83,7 +84,8 @@
                         <strong class="text-muted">Total (CAD)</strong>
                         <h4 class="font-weight-bold">$@CalculateTotal()</h4>
                     </li>
-                </ul><a href="#" class="btn btn-dark py-2 btn-block">Proceed to checkout</a>
+                </ul>
+                <button @onclick="e => GoToCheckout()" class="btn btn-dark py-2 btn-block">Proceed to checkout</button>
             </div>
         </div>
     </div>
@@ -105,7 +107,6 @@ else
 
 
 @code {
-
 
     CartItem selectedCartItem;
     public int quantity { get; set; }
@@ -182,6 +183,13 @@ else
         cartService.GetCartTotal();
         CalculateHST();
         CalculateTotal();
+    }
+
+
+    private void GoToCheckout()
+    {
+        checkoutService.CreateOrder();
+        NavigationManager.NavigateTo("Checkout/Checkout", true);
     }
 }
 

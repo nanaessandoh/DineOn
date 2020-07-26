@@ -16,7 +16,8 @@ namespace DineOn.Data.Models
         public string PostalCode { get; set; }
         public double Total { get; set; }
         public string OrderReference { get; set; }
+        public bool OrderCompleted { get; set; }
         public DateTime DateCreated { get; set; }
-        public IEnumerable<OrderItem> OrderDetails { get; set; }
+        public IEnumerable<OrderItem> OrderItems { get; set; }
     }
 }

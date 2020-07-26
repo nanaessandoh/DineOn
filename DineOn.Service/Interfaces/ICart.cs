@@ -14,7 +14,6 @@ namespace DineOn.Service.Interfaces
         void ChangeCartItemQuantity(int menuItemId, int quantity);
         void RemoveFromCart(int menuItemId);
         IEnumerable<CartItem> GetCartItems();
-        void ClearCart();
         double GetCartTotal();
         int GetCartCount();
     }

@@ -1,9 +1,10 @@
 ﻿@using Microsoft.AspNetCore.Components.Web
+@inject NavigationManager NavigationManager
 
 <div class="hero-banner bg-img">
     <div class="hero-text">
         <h1 class="display-3">Welcome to DineOn</h1>
-        <p><a class="btn btn-lg btn-warning mt-5" href="Menu/Index">Explore Our Menu</a></p>
+        <p><button class="btn btn-lg btn-warning mt-5" @onclick="NavigateToMenu">Explore Our Menu</button></p>
     </div>
 </div>
 
@@ -61,3 +62,10 @@
     </div>
 </section>
 
+@code{
+
+    private void NavigateToMenu()
+    {
+        NavigationManager.NavigateTo("Menu", true);
+    }
+}

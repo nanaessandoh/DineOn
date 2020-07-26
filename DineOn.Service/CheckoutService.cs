@@ -6,6 +6,7 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime;
 using System.Text;
 
 namespace DineOn.Service
@@ -23,6 +24,35 @@ namespace DineOn.Service
             _session = _httpContextAccessor.HttpContext.Session;
         }
 
+
+        public void CreateOrder()
+        {
+            // Delete Orders that are not completed
+            DeleteNotCompletedOrders();
+            // Create a new order
+            CreateNewOrder();
+        }
+
+
+        public void CompleteOrder(string[] details, double total)
+        {
+            // Migrate Selected Menu Items from CartItem to OrderItem
+            MigrateCartToOrder();
+
+            // Update order with details provided on checkout
+            UpdateOrderDetails(details,total);
+
+            // Clear the Order Cart
+            ClearCart();
+
+            // Save Changes
+            _context.SaveChanges();
+        }
+
+
+
+        // Helper Methods
+
         public string GetOrderReference()
         {
             return _session.GetString("cartId");
@@ -38,78 +68,93 @@ namespace DineOn.Service
                 .Where(asset => asset.CartId == cartId);
         }
 
-
-        public IEnumerable<OrderItem> GetOrderItems()
+        public void DeleteNotCompletedOrders()
         {
-            // Get Session Value
+            // Get session value
             var orderReference = GetOrderReference();
-            // Return list of items associated with session id
-            return _context.OrderItems
-                .Include(asset => asset.MenuItem)
-                .Where(asset => asset.OrderReference == orderReference);
-        }
-
-        public double GetOrderTotal()
-        {
-            double total = GetOrderItems().Select(asset => asset.MenuItem.Price * asset.Quantity).Sum();
-            return Math.Round(total + 3.49 + (0.15 * total) , 2);
-        }
-
-        public int GetOrderCount()
-        {
-            return GetOrderItems().Select(asset => asset.Quantity).Sum();
-        }
-
-        public void CreateOrder(Order order)
-        {
-
-            var orderReference = GetOrderReference();
-
-            // Delete Any Existing Order
-            var existingOrder = _context.Orders
-                .SingleOrDefault(asset => asset.OrderReference == orderReference);
-
-            if (existingOrder != null)
+            // Select list of not completed orders
+            var notCompletedOrders = _context.Orders
+                .Where(asset => asset.OrderCompleted == false && asset.OrderReference == orderReference);
+            // If list is not empty remove them
+            if (notCompletedOrders != null && notCompletedOrders.Any())
             {
-                _context.Remove(existingOrder);
+                _context.RemoveRange(notCompletedOrders);
+                _context.SaveChanges();
             }
+        }
+
+        public void CreateNewOrder()
+        {
+            var currentTime = DateTime.Now;
+            // Create New Order
+            var newOrder = new Order
+            {
+                Total = 0,
+                OrderCompleted = false,
+                DateCreated = currentTime,
+                OrderReference = GetOrderReference()
+            };
+            _context.Add(newOrder);
+            _context.SaveChanges();
+        }
+
+        public void UpdateOrderDetails(string[] details, double total)
+        {
+            // Get session value
+            var orderReference = GetOrderReference();
+
+            // Get the most recent Order created based on Session Id
+            var order = _context.Orders
+                .OrderByDescending(asset => asset.DateCreated)
+                .FirstOrDefault(asset => asset.OrderReference == orderReference);
+
+            _context.Update(order);
+            order.FirstName = details[0];
+            order.LastName = details[1];
+            order.AddressLine1 = details[2];
+            order.AddressLine2 = details[3];
+            order.City = details[4];
+            order.Email = details[5];
+            order.OrderCompleted = true;
+            order.PostalCode = details[6];
+            order.Total = total;
+
+        }
+
+        public void MigrateCartToOrder()
+        {
+            // Get session value
+            var orderReference = GetOrderReference();
+
+            // Get the most recent Order created based on Session Id
+            var order = _context.Orders
+                .OrderByDescending(asset => asset.DateCreated)
+                .FirstOrDefault(asset => asset.OrderReference == orderReference);
 
             // Get Items in the Cart
             var cartItems = GetCartItems();
 
+            // Migrate Items from CartItem table into OrderItem table
             foreach (var item in cartItems)
             {
-                // Check if item exist in Order Item table
-                var cartItem = _context.OrderItems
-                    .SingleOrDefault(asset => asset.MenuItem.MenuItemId == item.MenuItem.MenuItemId && asset.OrderReference == orderReference);
+                var orderItem = new OrderItem
+                {
+                    MenuItem = item.MenuItem,
+                    Quantity = item.Quantity,
+                    Order = order
+                };
 
-                // If Item does not exist add to the Order Table
-                if (cartItem == null)
-                {
-                    cartItem = new OrderItem
-                    {
-                        MenuItem = item.MenuItem,
-                        Quantity = item.Quantity,
-                        OrderReference = orderReference,
-                        Order = order 
-                    };
-                    _context.Add(cartItem);
-                }
-                // If Item exist check if Quantity is different and Update 
-                else if (item.Quantity != cartItem.Quantity )
-                {
-                    _context.Update(cartItem);
-                    cartItem.Quantity = item.Quantity;
-                }
+                _context.Add(orderItem);
+
             }
+        }
 
-            // Get Order Total
-            order.Total = GetOrderTotal();
-            order.OrderReference = GetOrderReference();
-
+        public void ClearCart()
+        {
+            // Get Items related to session Value
+            var cartItems = GetCartItems();
+            _context.RemoveRange(cartItems);
             _context.SaveChanges();
-
-
         }
 
     }

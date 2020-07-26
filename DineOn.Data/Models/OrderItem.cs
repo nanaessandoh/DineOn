@@ -9,7 +9,6 @@ namespace DineOn.Data.Models
         public int OrderItemId { get; set; }
         public virtual MenuItem MenuItem { get; set; }
         public int Quantity { get; set; }
-        public string OrderReference { get; set; }
         public virtual Order Order { get; set; }
     }
 }

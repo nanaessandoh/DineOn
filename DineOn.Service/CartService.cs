@@ -22,13 +22,10 @@ namespace DineOn.Service
             _session = _httpContextAccessor.HttpContext.Session;
         }
 
-
         public string GetCartId()
         {
             return _session.GetString("cartId");
         }
-
-
 
         public void AddToCart(MenuItem menuItem, int quantity)
         {
@@ -85,14 +82,6 @@ namespace DineOn.Service
                 .Where(asset => asset.CartId == cartId);
         }
 
-
-        public void ClearCart()
-        {
-            // Get Items related to session Value
-            var cartItems = GetCartItems();
-            _context.RemoveRange(cartItems);
-            _context.SaveChanges();
-        }
 
         public int GetCartCount()
         {
