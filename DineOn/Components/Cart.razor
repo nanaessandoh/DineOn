@@ -11,7 +11,7 @@
         <p class="display-3">Order Cart</p>
     </div>
     <div class="col-md-3 pt-md-5">
-        <a class="h4" @onclick="NavigateToMenu" role="button"><i class="fa fa-arrow-left" aria-hidden="true"></i>&nbsp;&nbsp; Return to Menu</a>
+        <a class="h4" @onclick="NavigateToMenu" role="button"><i class="fa fa-arrow-left" aria-hidden="true"></i>&nbsp;&nbsp;Return to Menu</a>
     </div>
 </div>
 <hr />
@@ -85,7 +85,7 @@
                         <h4 class="font-weight-bold">$@CalculateTotal()</h4>
                     </li>
                 </ul>
-                <button @onclick="e => GoToCheckout()" class="btn btn-dark py-2 btn-block">Proceed to checkout</button>
+                <button @onclick="e => GoToCheckout()" class="btn btn-dark btn-lg py-2 btn-block">Proceed to checkout</button>
             </div>
         </div>
     </div>
@@ -97,7 +97,7 @@ else
 {
 
     <div class="alert alert-info" role="alert">
-        <h4 class="alert-heading">Sorry!</h4><hr>
+        <h4 class="alert-heading">Sorry!</h4>
         <p>Your order cart is currently empty</p>
     </div>
 

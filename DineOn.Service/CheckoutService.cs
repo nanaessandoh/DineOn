@@ -111,12 +111,11 @@ namespace DineOn.Service
             _context.Update(order);
             order.FirstName = details[0];
             order.LastName = details[1];
-            order.AddressLine1 = details[2];
-            order.AddressLine2 = details[3];
-            order.City = details[4];
-            order.Email = details[5];
+            order.Address = details[2];
+            order.City = details[3];
+            order.Email = details[4];
             order.OrderCompleted = true;
-            order.PostalCode = details[6];
+            order.PostalCode = details[5];
             order.Total = total;
 
         }

@@ -5,10 +5,21 @@
 @inject IMenuItem menuService
 @inject ICart cartService
 
-<div class="row mb-3">
-    <div class="col-md-12 clearfix">
-        <p class="display-3">Success</p>
-    </div>
-</div>
-<hr />
 
+
+<div class="jumbotron text-center mt-3">
+    <h1 class="display-3">Order Complete!</h1>
+    <p class="lead"><strong>Your order is being prepared.</strong> The delivery driver will contact you on arrival. Thanks for patronising DineOn!</p>
+    <hr>
+    <p class="lead">
+        <button class="btn btn-lg btn-outline-dark mt-5" @onclick="NavigateToMenu">Explore Our Menu</button>
+    </p>
+</div>
+
+@code{
+
+    private void NavigateToMenu()
+    {
+        NavigationManager.NavigateTo("Menu", true);
+    }
+}

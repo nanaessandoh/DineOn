@@ -1,4 +1,4 @@
-﻿/* NAVBAR DROPDOWN ON HOVER */
+﻿// NAVBAR DROPDOWN ON HOVER 
 const $dropdown = $(".dropdown");
 const $dropdownToggle = $(".dropdown-toggle");
 const $dropdownMenu = $(".dropdown-menu");
@@ -24,6 +24,8 @@ $(window).on("load resize", function () {
         $dropdown.off("mouseenter mouseleave");
     }
 });
+
+
 
 
 
