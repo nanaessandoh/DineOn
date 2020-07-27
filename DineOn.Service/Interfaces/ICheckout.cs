@@ -8,7 +8,7 @@ namespace DineOn.Service.Interfaces
     public interface ICheckout
     {
         void CreateOrder();
-
+        Order GetCurrentOrder();
         void CompleteOrder(string[] details, double total);
     }
 }

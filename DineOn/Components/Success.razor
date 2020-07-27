@@ -4,17 +4,36 @@
 @inject NavigationManager NavigationManager
 @inject IMenuItem menuService
 @inject ICart cartService
+@inject ICheckout checkoutService
 
 
-
-<div class="jumbotron text-center mt-3">
-    <h1 class="display-3">Order Complete!</h1>
-    <p class="lead"><strong>Your order is being prepared.</strong> The delivery driver will contact you on arrival. Thanks for patronising DineOn!</p>
-    <hr>
-    <p class="lead">
-        <button class="btn btn-lg btn-outline-dark mt-5" @onclick="NavigateToMenu">Explore Our Menu</button>
-    </p>
-</div>
+@if (checkoutService.GetCurrentOrder() != null)
+{
+    <div class="jumbotron text-center mt-3">
+        <h1 class="display-3">Order Complete!</h1>
+        <p class="lead"><strong>Your order is being prepared.</strong> The delivery driver will contact you on arrival. Thanks for patronising DineOn!</p>
+        <hr>
+        <p class="lead">
+        <p>Want to try out another dish?</p>
+        <button class="btn btn-lg btn-outline-dark mt-3" @onclick="NavigateToMenu">Explore Our Menu</button>
+        </p>
+    </div>
+}
+else
+{
+    <div class="row mb-3">
+        <div class="col-md-9 clearfix">
+            <p class="display-3">DineOn</p>
+        </div>
+        <div class="col-md-3 pt-md-5">
+            <a class="h4" @onclick="NavigateToMenu" role="button"><i class="fa fa-arrow-left" aria-hidden="true"></i>&nbsp;&nbsp;Return to Menu</a>
+        </div>
+    </div>
+    <div class="alert alert-info" role="alert">
+        <h4 class="alert-heading">Sorry!</h4>
+        <p>You dont have any complete orders</p>
+    </div>
+}
 
 @code{
 

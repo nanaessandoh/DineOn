@@ -49,6 +49,16 @@ namespace DineOn.Service
             _context.SaveChanges();
         }
 
+        public Order GetCurrentOrder() 
+        {
+            // Get session value
+            var orderReference = GetOrderReference();
+
+            // Order created based on Session Id
+            return _context.Orders
+                .FirstOrDefault(asset => asset.OrderReference == orderReference && asset.OrderCompleted == true);
+        }
+
 
 
         // Helper Methods
@@ -70,11 +80,9 @@ namespace DineOn.Service
 
         public void DeleteNotCompletedOrders()
         {
-            // Get session value
-            var orderReference = GetOrderReference();
             // Select list of not completed orders
             var notCompletedOrders = _context.Orders
-                .Where(asset => asset.OrderCompleted == false && asset.OrderReference == orderReference);
+                .Where(asset => asset.OrderCompleted == false);
             // If list is not empty remove them
             if (notCompletedOrders != null && notCompletedOrders.Any())
             {
