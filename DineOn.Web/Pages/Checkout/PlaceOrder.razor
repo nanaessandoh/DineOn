@@ -1,0 +1,233 @@
+﻿@page "/checkout/placeorder"
+
+@if (cartService.GetCartItems(cartId) != null && cartService.GetCartItems(cartId).Any())
+{
+    <div class="row mb-3">
+        <div class="col-md-9 clearfix">
+            <p class="display-3">Checkout</p>
+        </div>
+        <div class="col-md-3 pt-md-5">
+            <a class="h4" @onclick="NavigateToCart" role="button"><i class="fa fa-arrow-left" aria-hidden="true"></i>&nbsp;&nbsp;Return to Cart</a>
+        </div>
+    </div>
+    <hr />
+
+    <div class="row">
+        <div class="col-md-4 order-md-2 mb-4">
+            <h4 class="d-flex justify-content-between align-items-center mb-3">
+                <span>Order summary</span>
+                <span class="badge badge-secondary">@cartService.GetCartCount(cartId) @GetLabel()</span>
+            </h4>
+            <ul class="list-group mb-3">
+                @foreach (var asset in cartService.GetCartItems(cartId))
+                {
+                    <li class="list-group-item d-flex justify-content-between lh-condensed">
+                        <div>
+                            <h6 class="my-0">@asset.MenuItem.Name</h6>
+                            <small>Quantity: @asset.Quantity</small>
+                        </div>
+                        <span>$@Math.Round(asset.Quantity * asset.MenuItem.Price, 2)</span>
+                    </li>
+                }
+                <li class="list-group-item d-flex justify-content-between">
+                    <span>Delivery fees </span>
+                    <strong>$3.49</strong>
+                </li>
+                <li class="list-group-item d-flex justify-content-between">
+                    <span>HST</span>
+                    <strong>$@CalculateHST()</strong>
+                </li>
+                <li class="list-group-item d-flex justify-content-between">
+                    <span>Total (CAD)</span>
+                    <strong>$@CalculateTotal()</strong>
+                </li>
+            </ul>
+        </div>
+
+
+        <div class="col-md-8 order-md-1">
+            <h4 class="mb-3">Fill to complete order</h4>
+            <EditForm Model="@placeOrderModel" OnValidSubmit="@SubmitOrder">
+                <DataAnnotationsValidator />
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label for="firstName">First name</label>
+                        <InputText type="text" id="firstName" class="form-control" @bind-Value="@placeOrderModel.FirstName"></InputText>
+                        <ValidationMessage For="@(() => placeOrderModel.FirstName)" />
+
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label for="lastName">Last name</label>
+                        <InputText type="text" class="form-control" id="lastName" @bind-Value="@placeOrderModel.LastName"></InputText>
+
+                        <ValidationMessage For="@(() => placeOrderModel.LastName)" />
+
+                    </div>
+                </div>
+                <div class="mb-3">
+                    <label for="email">Email</label>
+                    <InputText type="email" class="form-control" id="email" placeholder="you@example.com" @bind-Value="@placeOrderModel.Email"></InputText>
+
+                    <ValidationMessage For="@(() => placeOrderModel.Email)" />
+
+                </div>
+
+                <div class="mb-3">
+                    <label for="address">Address</label>
+                    <InputText type="text" class="form-control" id="address" placeholder="1234 Main St" @bind-Value="@placeOrderModel.Address"></InputText>
+
+                    <ValidationMessage For="@(() => placeOrderModel.Address)" />
+
+                </div>
+
+                <div class="row">
+                    <div class="col-md-5 mb-3">
+                        <label for="city">City</label>
+                        <InputSelect class="form-control" @bind-Value="placeOrderModel.City">
+                            <option value="">Select city ...</option>
+                            <option>St. John's</option>
+                            <option>Mount Pearl</option>
+                            <option>Paradise</option>
+                            <option>Conception Bay South</option>
+                        </InputSelect>
+
+                        <ValidationMessage For="@(() => placeOrderModel.City)" />
+
+                    </div>
+
+
+                    <div class="col-md-3 mb-3">
+                        <label for="zip">Postal Code</label>
+                        <InputText type="text" class="form-control" id="zip" @bind-Value="@placeOrderModel.PostalCode"></InputText>
+
+                        <ValidationMessage For="@(() => placeOrderModel.PostalCode)" />
+
+                    </div>
+                </div>
+
+
+                <hr class="mb-4">
+                <h4 class="mb-3">Payment</h4>
+
+                <div class="form-check form-check-inline my-3">
+                    <div class="custom-control custom-radio">
+                        <input id="credit" name="paymentMethod" type="radio" class="custom-control-input" checked>
+                        <label class="custom-control-label" for="credit">Credit card</label>
+                    </div>&nbsp;&nbsp;
+                    <div class="custom-control custom-radio">
+                        <input id="debit" name="paymentMethod" type="radio" class="custom-control-input">
+                        <label class="custom-control-label" for="debit">Debit card</label>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label for="card-name">Name on card</label>
+                        <InputText type="text" class="form-control" id="card-name" @bind-Value="@placeOrderModel.CardName"></InputText>
+                        <small class="text-muted">Full name as displayed on card</small>
+
+                        <ValidationMessage For="@(() => placeOrderModel.CardName)" />
+
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label for="card-number">Credit card number</label>
+                        <InputText type="number" class="form-control" id="card-number" @bind-Value="@placeOrderModel.CardNumber"></InputText>
+
+                        <ValidationMessage For="@(() => placeOrderModel.CardNumber)" />
+
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-3 mb-3">
+                        <label for="card-expiration">Expiration</label>
+                        <InputText type="number" class="form-control" id="card-expiration" @bind-Value="@placeOrderModel.CardExpiration"></InputText>
+                        <small class="text-muted">Expiry date format MMYY</small>
+
+                        <ValidationMessage For="@(() => placeOrderModel.CardExpiration)" />
+
+                    </div>
+                    <div class="col-md-3 mb-3">
+                        <label for="card-cvv">CVV</label>
+                        <InputText type="number" class="form-control" id="card-cvv" @bind-Value="@placeOrderModel.CardCVV"></InputText>
+
+                        <ValidationMessage For="@(() => placeOrderModel.CardCVV)" />
+
+                    </div>
+                </div>
+                <hr class="mb-4">
+                <button class="btn btn-dark btn-lg btn-block" type="submit">Place order</button>
+            </EditForm>
+        </div>
+    </div>
+}
+else
+{
+    <div class="row mb-3">
+        <div class="col-md-9 clearfix">
+            <p class="display-3">Checkout</p>
+        </div>
+        <div class="col-md-3 pt-md-5">
+            <a class="h4" @onclick="NavigateToMenu" role="button"><i class="fa fa-arrow-left" aria-hidden="true"></i>&nbsp;&nbsp;Return to Menu</a>
+        </div>
+    </div>
+    <div class="alert alert-info" role="alert">
+        <h4 class="alert-heading">Sorry!</h4>
+        <p>Your order cart is currently empty</p>
+    </div>
+}
+
+
+
+
+@code{
+
+    private PlaceOrderModel placeOrderModel = new PlaceOrderModel();
+
+
+    private string cartId { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        if (string.IsNullOrEmpty(await ProtectedSessionStore.GetAsync<string>("cartId")))
+        {
+            await ProtectedSessionStore.SetAsync("cartId", Guid.NewGuid().ToString());
+        }
+        cartId = await ProtectedSessionStore.GetAsync<string>("cartId");
+    }
+
+    private string GetLabel()
+    {
+        return cartService.GetCartCount(cartId) > 1 ? "Items" : "Item";
+    }
+
+    private void NavigateToMenu()
+    {
+        NavigationManager.NavigateTo("Menu/FullMenu", true);
+    }
+
+    private void NavigateToCart()
+    {
+        NavigationManager.NavigateTo("Checkout/Cart", true);
+    }
+
+    private double CalculateHST()
+    {
+        return Math.Round(0.15 * cartService.GetCartTotal(cartId), 2);
+    }
+
+    private double CalculateTotal()
+    {
+        return Math.Round(cartService.GetCartTotal(cartId) + CalculateHST() + 3.49, 2);
+    }
+
+
+
+    private void SubmitOrder()
+    {
+
+        NavigationManager.NavigateTo("Checkout/Success", true);
+        checkoutService.CompleteOrder(placeOrderModel, CalculateTotal(), cartId);
+
+    }
+
+
+}

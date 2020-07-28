@@ -1,0 +1,18 @@
+﻿@using System.Net.Http
+@using Microsoft.AspNetCore.Authorization
+@using Microsoft.AspNetCore.Components.Authorization
+@using Microsoft.AspNetCore.Components.Forms
+@using Microsoft.AspNetCore.Components.Routing
+@using Microsoft.AspNetCore.Components.Web
+@using Microsoft.JSInterop
+@using DineOn.Web
+@using DineOn.Web.Shared
+@using DineOn.Data.Models
+@using DineOn.Service.Interfaces
+@using Microsoft.AspNetCore.ProtectedBrowserStorage
+@using System.ComponentModel.DataAnnotations
+@inject NavigationManager NavigationManager
+@inject ProtectedSessionStorage ProtectedSessionStore
+@inject IMenuItem menuService
+@inject ICart cartService
+@inject ICheckout checkoutService

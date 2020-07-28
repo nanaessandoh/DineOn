@@ -28,13 +28,13 @@ namespace DineOn.Data.Models
         [MinLength(2, ErrorMessage = "Invalid full name")]
         public string CardName { get; set; }
         [Required(ErrorMessage = "Please enter card number as it appears on card")]
-        [StringLength(16, ErrorMessage = "Card number is 16 digits")]
+        [StringLength(16, MinimumLength = 16, ErrorMessage = "Card number is 16 digits")]
         public string CardNumber { get; set; }
         [Required(ErrorMessage = "Please enter card expiry date as it appears on card")]
-        [StringLength(4, ErrorMessage = "Enter card expiry in the format MMYY")]
+        [StringLength(4, MinimumLength = 4, ErrorMessage = "Enter card expiry in the format MMYY")]
         public string CardExpiration { get; set; }
-        [Required(ErrorMessage = "Please enter CVV date as it appears on the back of the card")]
-        [StringLength(3, ErrorMessage = "Please enter a valid CVV (3 digits)")]
+        [Required(ErrorMessage = "Please enter CVV as it appears on the back of the card")]
+        [StringLength(3, MinimumLength = 3, ErrorMessage = "Please enter a valid CVV (3 digits)")]
         public string CardCVV { get; set; }
     }
 }

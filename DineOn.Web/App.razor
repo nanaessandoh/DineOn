@@ -1,0 +1,16 @@
+﻿
+<Router AppAssembly="@typeof(Program).Assembly">
+    <Found Context="routeData">
+        <RouteView RouteData="@routeData" DefaultLayout="@typeof(MainLayout)" />
+    </Found>
+    <NotFound>
+        <LayoutView Layout="@typeof(MainLayout)">
+            <div class="row pt-3 mt-3"><br />
+            <div class="alert alert-info" role="alert">
+                <h4 class="alert-heading">Sorry!</h4>
+                <p>This page does not exist!</p>
+            </div>
+            </div>
+        </LayoutView>
+    </NotFound>
+</Router>
