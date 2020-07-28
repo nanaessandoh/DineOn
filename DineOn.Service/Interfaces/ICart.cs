@@ -8,13 +8,12 @@ namespace DineOn.Service.Interfaces
 {
     public interface ICart
     {
-        string GetCartId();
-        void AddToCart(MenuItem menuItem, int quantity);
-        CartItem GetCartItem(int menuItemId);
-        void ChangeCartItemQuantity(int menuItemId, int quantity);
-        void RemoveFromCart(int menuItemId);
-        IEnumerable<CartItem> GetCartItems();
-        double GetCartTotal();
-        int GetCartCount();
+        void AddToCart(MenuItem menuItem, int quantity, string cartId);
+        CartItem GetCartItem(int menuItemId, string cartId);
+        void ChangeCartItemQuantity(int menuItemId, int quantity, string cartId);
+        void RemoveFromCart(int menuItemId, string cartId);
+        IEnumerable<CartItem> GetCartItems(string cartId);
+        double GetCartTotal(string cartId);
+        int GetCartCount(string cartId);
     }
 }

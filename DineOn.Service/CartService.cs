@@ -12,25 +12,15 @@ namespace DineOn.Service
     public class CartService : ICart
     {
         private readonly DineOnDBContext _context;
-        private readonly IHttpContextAccessor _httpContextAccessor;
-        private readonly ISession _session;
 
-        public CartService(DineOnDBContext context, IHttpContextAccessor httpContextAccessor)
+        public CartService(DineOnDBContext context)
         {
             _context = context;
-            _httpContextAccessor = httpContextAccessor;
-            _session = _httpContextAccessor.HttpContext.Session;
         }
 
-        public string GetCartId()
+       
+        public void AddToCart(MenuItem menuItem, int quantity, string cartId)
         {
-            return _session.GetString("cartId");
-        }
-
-        public void AddToCart(MenuItem menuItem, int quantity)
-        {
-            // Get Session value and time
-            var cartId = GetCartId();
             // Check Orders to see if item exist
             var orderCartItem = _context.CartItems
                 .SingleOrDefault(asset => asset.MenuItem.MenuItemId == menuItem.MenuItemId && asset.CartId == cartId);
@@ -56,10 +46,8 @@ namespace DineOn.Service
             _context.SaveChanges();
         }
 
-        public void RemoveFromCart(int menuItemId)
+        public void RemoveFromCart(int menuItemId, string cartId)
         {  
-            // Get Session Value
-            var cartId = GetCartId();
             // Check Orders to see if item exist
             var orderCartItem = _context.CartItems
                 .SingleOrDefault(asset => asset.MenuItem.MenuItemId == menuItemId && asset.CartId == cartId);
@@ -72,33 +60,29 @@ namespace DineOn.Service
             }
         }
 
-        public IEnumerable<CartItem> GetCartItems()
+        public IEnumerable<CartItem> GetCartItems(string cartId)
         {
-            // Get Session Value
-            var cartId = GetCartId();
             // Return list of items associated with session id
             return _context.CartItems
                 .Include(asset => asset.MenuItem)
                 .Where(asset => asset.CartId == cartId);
         }
 
-
-        public int GetCartCount()
+        public int GetCartCount(string cartId)
         {
-            return GetCartItems().Select(asset => asset.Quantity).Sum();
+            return GetCartItems(cartId).Select(asset => asset.Quantity).Sum();
         }
 
-
-        public double GetCartTotal()
+        public double GetCartTotal(string cartId)
         {
-            double total = GetCartItems().Select(asset => asset.MenuItem.Price * asset.Quantity).Sum();
+            double total = GetCartItems(cartId).Select(asset => asset.MenuItem.Price * asset.Quantity).Sum();
             return Math.Round(total, 2);
         }
 
-        public void ChangeCartItemQuantity(int menuItemId, int quantity)
+        public void ChangeCartItemQuantity(int menuItemId, int quantity, string cartId)
         {
             // Select Cart Item
-            var cartItem = GetCartItem(menuItemId); 
+            var cartItem = GetCartItem(menuItemId, cartId); 
             // If the Item Exist and the quantity is not that same as the new quantity ppdate 
             if(cartItem != null && cartItem.Quantity != quantity)
             {
@@ -108,10 +92,8 @@ namespace DineOn.Service
             }
         }
 
-        public CartItem GetCartItem(int menuItemId)
+        public CartItem GetCartItem(int menuItemId, string cartId)
         {
-            // Get the Cart Id
-            var cartId = GetCartId();
             // Select Cart Item
             return _context.CartItems
                 .Include(asset => asset.MenuItem)

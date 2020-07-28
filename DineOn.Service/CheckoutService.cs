@@ -14,64 +14,50 @@ namespace DineOn.Service
     public class CheckoutService : ICheckout
     {
         private readonly DineOnDBContext _context;
-        private readonly IHttpContextAccessor _httpContextAccessor;
-        private readonly ISession _session;
 
-        public CheckoutService(DineOnDBContext context, IHttpContextAccessor httpContextAccessor)
+        public CheckoutService(DineOnDBContext context)
         {
             _context = context;
-            _httpContextAccessor = httpContextAccessor;
-            _session = _httpContextAccessor.HttpContext.Session;
         }
 
 
-        public void CreateOrder()
+        public void CreateOrder(string cartId)
         {
             // Delete Orders that are not completed
             DeleteNotCompletedOrders();
             // Create a new order
-            CreateNewOrder();
+            CreateNewOrder(cartId);
         }
 
 
-        public void CompleteOrder(string[] details, double total)
+        public void CompleteOrder(string[] details, double total, string cartId)
         {
             // Migrate Selected Menu Items from CartItem to OrderItem
-            MigrateCartToOrder();
+            MigrateCartToOrder(cartId);
 
             // Update order with details provided on checkout
-            UpdateOrderDetails(details,total);
+            UpdateOrderDetails(details,total, cartId);
 
             // Clear the Order Cart
-            ClearCart();
+            ClearCart(cartId);
 
             // Save Changes
             _context.SaveChanges();
         }
 
-        public Order GetCurrentOrder() 
+        public Order GetCurrentOrder(string cartId) 
         {
-            // Get session value
-            var orderReference = GetOrderReference();
-
             // Order created based on Session Id
             return _context.Orders
-                .FirstOrDefault(asset => asset.OrderReference == orderReference && asset.OrderCompleted == true);
+                .FirstOrDefault(asset => asset.OrderReference == cartId && asset.OrderCompleted == true);
         }
-
 
 
         // Helper Methods
 
-        public string GetOrderReference()
-        {
-            return _session.GetString("cartId");
-        }
 
-        public IEnumerable<CartItem> GetCartItems()
+        public IEnumerable<CartItem> GetCartItems(string cartId)
         {
-            // Get Session Value
-            var cartId = GetOrderReference();
             // Return list of items associated with session id
             return _context.CartItems
                 .Include(asset => asset.MenuItem)
@@ -91,7 +77,7 @@ namespace DineOn.Service
             }
         }
 
-        public void CreateNewOrder()
+        public void CreateNewOrder(string cartId)
         {
             var currentTime = DateTime.Now;
             // Create New Order
@@ -100,21 +86,18 @@ namespace DineOn.Service
                 Total = 0,
                 OrderCompleted = false,
                 DateCreated = currentTime,
-                OrderReference = GetOrderReference()
+                OrderReference = cartId
             };
             _context.Add(newOrder);
             _context.SaveChanges();
         }
 
-        public void UpdateOrderDetails(string[] details, double total)
+        public void UpdateOrderDetails(string[] details, double total, string cartId)
         {
-            // Get session value
-            var orderReference = GetOrderReference();
-
             // Get the most recent Order created based on Session Id
             var order = _context.Orders
                 .OrderByDescending(asset => asset.DateCreated)
-                .FirstOrDefault(asset => asset.OrderReference == orderReference);
+                .FirstOrDefault(asset => asset.OrderReference == cartId);
 
             _context.Update(order);
             order.FirstName = details[0];
@@ -128,18 +111,16 @@ namespace DineOn.Service
 
         }
 
-        public void MigrateCartToOrder()
+        public void MigrateCartToOrder(string cartId)
         {
-            // Get session value
-            var orderReference = GetOrderReference();
 
             // Get the most recent Order created based on Session Id
             var order = _context.Orders
                 .OrderByDescending(asset => asset.DateCreated)
-                .FirstOrDefault(asset => asset.OrderReference == orderReference);
+                .FirstOrDefault(asset => asset.OrderReference == cartId);
 
             // Get Items in the Cart
-            var cartItems = GetCartItems();
+            var cartItems = GetCartItems(cartId);
 
             // Migrate Items from CartItem table into OrderItem table
             foreach (var item in cartItems)
@@ -156,10 +137,10 @@ namespace DineOn.Service
             }
         }
 
-        public void ClearCart()
+        public void ClearCart(string cartId)
         {
             // Get Items related to session Value
-            var cartItems = GetCartItems();
+            var cartItems = GetCartItems(cartId);
             _context.RemoveRange(cartItems);
             _context.SaveChanges();
         }
