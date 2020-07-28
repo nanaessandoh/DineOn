@@ -30,13 +30,13 @@ namespace DineOn.Service
         }
 
 
-        public void CompleteOrder(string[] details, double total, string cartId)
+        public void CompleteOrder(PlaceOrderModel model, double total, string cartId)
         {
             // Migrate Selected Menu Items from CartItem to OrderItem
             MigrateCartToOrder(cartId);
 
             // Update order with details provided on checkout
-            UpdateOrderDetails(details,total, cartId);
+            UpdateOrderDetails(model,total, cartId);
 
             // Clear the Order Cart
             ClearCart(cartId);
@@ -92,7 +92,7 @@ namespace DineOn.Service
             _context.SaveChanges();
         }
 
-        public void UpdateOrderDetails(string[] details, double total, string cartId)
+        public void UpdateOrderDetails(PlaceOrderModel model, double total, string cartId)
         {
             // Get the most recent Order created based on Session Id
             var order = _context.Orders
@@ -100,13 +100,13 @@ namespace DineOn.Service
                 .FirstOrDefault(asset => asset.OrderReference == cartId);
 
             _context.Update(order);
-            order.FirstName = details[0];
-            order.LastName = details[1];
-            order.Address = details[2];
-            order.City = details[3];
-            order.Email = details[4];
+            order.FirstName = model.FirstName;
+            order.LastName = model.LastName;
+            order.Address = model.Address;
+            order.City = model.City;
+            order.Email = model.City;
             order.OrderCompleted = true;
-            order.PostalCode = details[5];
+            order.PostalCode = model.PostalCode;
             order.Total = total;
 
         }

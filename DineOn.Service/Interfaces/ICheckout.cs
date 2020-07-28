@@ -9,6 +9,6 @@ namespace DineOn.Service.Interfaces
     {
         void CreateOrder(string cartId);
         Order GetCurrentOrder(string cartId);
-        void CompleteOrder(string[] details, double total, string cartId);
+        void CompleteOrder(PlaceOrderModel model, double total, string cartId);
     }
 }
