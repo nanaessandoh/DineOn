@@ -1,87 +1,94 @@
 ﻿@page "/"
 
-<div class="hero-banner bg-img">
-    <div class="hero-text">
-        <h1 class="display-3">Welcome to DineOn</h1>
-        <p><button class="btn btn-lg btn-warning mt-5" @onclick="NavigateToMenu">Explore Our Menu</button></p>
-    </div>
-</div>
 
-<section>
-    <div class="container">
-        <div class="row align-items-center">
-            <div class="col-lg-6 order-lg-2">
-                <div class="p-5">
-                    <img class="img-fluid rounded-circle" src="/images/home/burger.jpg" alt="">
-                </div>
-            </div>
-            <div class="col-lg-6 order-lg-1">
-                <div class="p-5">
-                    <h2 class="display-4">The Best Burger Recipes...</h2>
-                    <p>Sharing our secrets for making restaurant quality burgers, from the juiciest burger patties to the best buns.</p>
+
+    <section class="bgimage">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 text-center mt-5 pt-5">
+                    <p class="display-3" style="color:white;">Welcome to DineOn</p>
+                    <p><button class="btn btn-lg btn-warning mt-5" @onclick="NavigateToMenu">Explore Our Menu</button></p>
                 </div>
             </div>
         </div>
-    </div>
-</section>
+    </section>
 
-<section>
-    <div class="container">
-        <div class="row align-items-center">
-            <div class="col-lg-6">
-                <div class="p-5">
-                    <img class="img-fluid rounded-circle" src="/images/home/mexican.jpg" alt="">
-                </div>
-            </div>
-            <div class="col-lg-6">
-                <div class="p-5">
-                    <h2 class="display-4">Enjoy your favourite Mexican dishes!</h2>
-                    <p>Our Mexican cuisines range from tacos, burritos, enchiladas, and more—as well as find the perfect Mexican dish for your taste.</p>
-                </div>
-            </div>
-        </div>
-    </div>
-</section>
 
-<section>
-    <div class="container">
-        <div class="row align-items-center">
-            <div class="col-lg-6 order-lg-2">
-                <div class="p-5">
-                    <img class="img-fluid rounded-circle" src="/images/home/snack.jpg" alt="">
+    <section>
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-lg-6 order-lg-2">
+                    <div class="p-5">
+                        <img class="img-fluid rounded-circle" src="/images/home/burger.jpg" alt="">
+                    </div>
                 </div>
-            </div>
-            <div class="col-lg-6 order-lg-1">
-                <div class="p-5">
-                    <h2 class="display-4">First impression is the last impression!</h2>
-                    <p>Raise the bar with these sensational starters and set the perfect tone by kicking off your dinner party in style.</p>
+                <div class="col-lg-6 order-lg-1">
+                    <div class="p-5">
+                        <h2 class="display-4">The Best Burger Recipes...</h2>
+                        <p>Sharing our secrets for making restaurant quality burgers, from the juiciest burger patties to the best buns.</p>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
-</section>
+    </section>
+
+    <section>
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-lg-6">
+                    <div class="p-5">
+                        <img class="img-fluid rounded-circle" src="/images/home/mexican.jpg" alt="">
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <div class="p-5">
+                        <h2 class="display-4">Enjoy your favourite Mexican dishes!</h2>
+                        <p>Our Mexican cuisines range from tacos, burritos, enchiladas, and more—as well as find the perfect Mexican dish for your taste.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section>
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-lg-6 order-lg-2">
+                    <div class="p-5">
+                        <img class="img-fluid rounded-circle" src="/images/home/snack.jpg" alt="">
+                    </div>
+                </div>
+                <div class="col-lg-6 order-lg-1">
+                    <div class="p-5">
+                        <h2 class="display-4">First impression is the last impression!</h2>
+                        <p>Raise the bar with these sensational starters and set the perfect tone by kicking off your dinner party in style.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
 
 
 
 
-@code{
+    @code{
 
-    private string cartId { get; set; }
+        private string cartId { get; set; }
 
-    private void NavigateToMenu()
-    {
-        NavigationManager.NavigateTo("Menu/FullMenu", true);
-    }
-
-
-    protected override async Task OnInitializedAsync()
-    {
-        if (string.IsNullOrEmpty(await ProtectedSessionStore.GetAsync<string>("cartId")))
+        private void NavigateToMenu()
         {
-            await ProtectedSessionStore.SetAsync("cartId", Guid.NewGuid().ToString());
+            NavigationManager.NavigateTo("Menu/FullMenu", true);
         }
-        cartId = await ProtectedSessionStore.GetAsync<string>("cartId");
+
+
+        protected override async Task OnInitializedAsync()
+        {
+            if (string.IsNullOrEmpty(await ProtectedSessionStore.GetAsync<string>("cartId")))
+            {
+                await ProtectedSessionStore.SetAsync("cartId", Guid.NewGuid().ToString());
+            }
+            cartId = await ProtectedSessionStore.GetAsync<string>("cartId");
+
+        }
 
     }
-
-}
