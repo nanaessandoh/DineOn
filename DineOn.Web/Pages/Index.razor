@@ -19,7 +19,7 @@
             <div class="row align-items-center">
                 <div class="col-lg-6 order-lg-2">
                     <div class="p-5">
-                        <img class="img-fluid rounded-circle" src="/images/home/burger.jpg" alt="">
+                        <img class="img-fluid rounded-circle" @onclick="NavigateToBurgers" src="/images/home/burger.jpg" alt="">
                     </div>
                 </div>
                 <div class="col-lg-6 order-lg-1">
@@ -37,7 +37,7 @@
             <div class="row align-items-center">
                 <div class="col-lg-6">
                     <div class="p-5">
-                        <img class="img-fluid rounded-circle" src="/images/home/mexican.jpg" alt="">
+                        <img class="img-fluid rounded-circle" @onclick="NavigateToMexican"  src="/images/home/mexican.jpg" alt="">
                     </div>
                 </div>
                 <div class="col-lg-6">
@@ -55,7 +55,7 @@
             <div class="row align-items-center">
                 <div class="col-lg-6 order-lg-2">
                     <div class="p-5">
-                        <img class="img-fluid rounded-circle" src="/images/home/snack.jpg" alt="">
+                        <img class="img-fluid rounded-circle" src="/images/home/snack.jpg" @onclick="NavigateToSnacks"  alt="">
                     </div>
                 </div>
                 <div class="col-lg-6 order-lg-1">
@@ -78,6 +78,21 @@
         private void NavigateToMenu()
         {
             NavigationManager.NavigateTo("Menu/FullMenu", true);
+        }
+
+        private void NavigateToBurgers()
+        {
+            NavigationManager.NavigateTo("Menu/Burgers", true);
+        }
+
+        private void NavigateToSnacks()
+        {
+            NavigationManager.NavigateTo("Menu/Starters", true);
+        }
+
+        private void NavigateToMexican()
+        {
+            NavigationManager.NavigateTo("Menu/Mexican", true);
         }
 
 
