@@ -20,7 +20,7 @@ Live Demo Available [Here](http://dineon.azurewebsites.net/)
 # Features Test
 - Responsive web design
   - [See mobile emulators](https://www.responsinator.com/?url=https%3A%2F%2Fdineon.azurewebsites.net%2F)
-- High performance. Gets 89/100 points on Google PageSpeed Insights for Desktop
+- High performance. Gets 74/100 points on Google PageSpeed Insights for Desktop
   - [Run PageSpeed Insights](https://developers.google.com/speed/pagespeed/insights/?url=https%3A%2F%2Fdineon.azurewebsites.net%2F&tab=desktop)
 
 
